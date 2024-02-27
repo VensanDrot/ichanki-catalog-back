@@ -1,6 +1,6 @@
 from django.urls import path
 
-app_name = 'content'
+app_name = 'catalog'
 urlpatterns = [
-    path()
+    # path
 ]

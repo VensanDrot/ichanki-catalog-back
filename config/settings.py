@@ -35,11 +35,15 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',
     'corsheaders',
+    'modeltranslation',
 
     # apps
     'apps.authentication',
     'apps.files',
+    'apps.catalog',
     'apps.content',
+    'apps.shopping',
+    'apps.tools',
 ]
 
 MIDDLEWARE = [
@@ -112,10 +116,12 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# AUTH_USER_MODEL = 'authentication.User'
-
+AUTH_USER_MODEL = 'authentication.User'
 
 # Internationalization
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
+MODELTRANSLATION_AUTO_FIELDS = False
+
 LANGUAGE_CODE = 'en-us'
 LANGUAGES = [
     ('en', 'English'),
