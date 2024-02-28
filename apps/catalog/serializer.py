@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.catalog.models import Size, Color, Category
+from apps.catalog.models import Size, Color, Category, Catalog
 
 
 class GetCategorySerializer(serializers.ModelSerializer):
@@ -46,3 +46,26 @@ class PostSizeSerializer(serializers.ModelSerializer):
         fields = ['name_uz',
                   'name_ru',
                   'name_en', ]
+
+
+class GetCatalogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Catalog
+        fields = ['id',
+                  'name',
+                  'description'
+                  'file',
+                  'category', ]
+
+
+class PostCatalogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Catalog
+        fields = ['name_uz',
+                  'name_ru',
+                  'name_en',
+                  'description_uz',
+                  'description_ru',
+                  'description_en',
+                  'file',
+                  'category', ]
