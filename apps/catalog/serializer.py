@@ -53,7 +53,7 @@ class GetCatalogSerializer(serializers.ModelSerializer):
         model = Catalog
         fields = ['id',
                   'name',
-                  'description'
+                  'description',
                   'file',
                   'category', ]
 
