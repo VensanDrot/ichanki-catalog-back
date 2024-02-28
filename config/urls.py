@@ -13,9 +13,9 @@ schema_view = get_schema_view(
         default_version='v1',
         description="Swagger foy KPI project, token authorization: user __/auth/token/__ API then click authorize "
                     "button and type __Bearer {token}__.",
-        terms_of_service="https://digitagro.uz/",
-        contact=openapi.Contact(email="digitalization@agro.uz"),
-        license=openapi.License(name="AGRO License"),
+        terms_of_service="https://domen.uz/",
+        contact=openapi.Contact(email="help@domen.uz"),
+        license=openapi.License(name="ICHANKI License"),
     ),
     public=True,
     permission_classes=[permissions.AllowAny, ],
@@ -29,6 +29,10 @@ urlpatterns = [
     path('control-panel/', admin.site.urls),
     path('auth/', include('apps.authentication.urls')),
     path('catalog/', include('apps.catalog.urls')),
+    path('content/', include('apps.content.urls')),
+    path('files/', include('apps.files.urls')),
+    path('shopping/', include('apps.shopping.urls')),
+    path('tools/', include('apps.tools.urls')),
 ]
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

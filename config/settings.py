@@ -1,9 +1,11 @@
-from datetime import timedelta
 from os import getenv
 from os.path import join as join_path
-from pathlib import Path
 
+from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
+
+from django.utils.translation import gettext_lazy as _
 
 load_dotenv()
 
@@ -124,9 +126,9 @@ MODELTRANSLATION_AUTO_FIELDS = False
 
 LANGUAGE_CODE = 'en-us'
 LANGUAGES = [
-    ('en', 'English'),
-    ('uz', 'Uzbek'),
-    ('ru', 'Russian'),
+    ('en', _('English')),
+    ('uz', _('Uzbek')),
+    ('ru', _('Russian')),
 ]
 
 TIME_ZONE = 'UTC'

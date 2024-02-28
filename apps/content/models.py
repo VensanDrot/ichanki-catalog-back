@@ -15,7 +15,7 @@ class News(BaseModel):
         db_table = 'News'
 
 
-class KnowledgeBase(BaseModel):
+class Article(BaseModel):
     class Meta:
-        db_table = 'KnowledgeBase'
+        db_table = 'Article'
 # TODO: end this models.py
