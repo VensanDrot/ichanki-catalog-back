@@ -59,6 +59,8 @@ class GetCatalogSerializer(serializers.ModelSerializer):
 
 
 class PostCatalogSerializer(serializers.ModelSerializer):
+    file = serializers.FileField()
+
     class Meta:
         model = Catalog
         fields = ['name_uz',

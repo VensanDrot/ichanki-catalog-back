@@ -1,9 +1,9 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.viewsets import ModelViewSet
 
-from apps.catalog.models import Category, Color, Size
+from apps.catalog.models import Category, Color, Size, Catalog
 from apps.catalog.serializer import GetCategorySerializer, GetColorSerializer, GetSizeSerializer, \
-    PostCategorySerializer, PostSizeSerializer, PostColorSerializer
+    PostCategorySerializer, PostSizeSerializer, PostColorSerializer, GetCatalogSerializer, PostCatalogSerializer
 from config.utils.permissions import LandingPage
 
 
@@ -79,4 +79,29 @@ class SizeModelViewSet(ModelViewSet):
         elif self.action == 'partial_update':
             return PostSizeSerializer(self.get_object(), data=kwargs.get('data'),
                                       context={'request': self.request}, partial=True)
+        return super().get_serializer(*args, **kwargs)
+
+
+class CatalogModelViewSet(ModelViewSet):
+    queryset = Catalog.objects.all()
+    serializer_class = GetCatalogSerializer
+    permission_classes = (LandingPage,)
+
+    @swagger_auto_schema(request_body=PostCatalogSerializer)
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(request_body=PostCatalogSerializer)
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    def get_serializer(self, *args, **kwargs):
+        if self.action == 'create':
+            return PostCatalogSerializer(data=kwargs.get('data'), context={'request': self.request})
+        elif self.action == 'update':
+            return PostCatalogSerializer(self.get_object(), data=kwargs.get('data'),
+                                         context={'request': self.request})
+        elif self.action == 'partial_update':
+            return PostCatalogSerializer(self.get_object(), data=kwargs.get('data'),
+                                         context={'request': self.request}, partial=True)
         return super().get_serializer(*args, **kwargs)
