@@ -3,3 +3,4 @@
 env/
 /logs.log
 /db.sqlite3
+media/uploads/

@@ -49,6 +49,8 @@ class PostSizeSerializer(serializers.ModelSerializer):
 
 
 class GetCatalogSerializer(serializers.ModelSerializer):
+    file = serializers.CharField(source='file.path')
+
     class Meta:
         model = Catalog
         fields = ['id',
@@ -59,8 +61,6 @@ class GetCatalogSerializer(serializers.ModelSerializer):
 
 
 class PostCatalogSerializer(serializers.ModelSerializer):
-    file = serializers.FileField()
-
     class Meta:
         model = Catalog
         fields = ['name_uz',

@@ -1,4 +1,5 @@
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 
 from apps.catalog.models import Category, Color, Size, Catalog
@@ -85,6 +86,7 @@ class SizeModelViewSet(ModelViewSet):
 class CatalogModelViewSet(ModelViewSet):
     queryset = Catalog.objects.all()
     serializer_class = GetCatalogSerializer
+    # parser_classes = (MultiPartParser,)
     permission_classes = (LandingPage,)
 
     @swagger_auto_schema(request_body=PostCatalogSerializer)

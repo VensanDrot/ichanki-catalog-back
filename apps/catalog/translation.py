@@ -8,7 +8,7 @@ class NameTranslationOptions(TranslationOptions):
 
 
 class CatalogTranslationOptions(TranslationOptions):
-    fields = ('name', 'description', )
+    fields = ('name', 'description',)
 
 
 translator.register(Category, NameTranslationOptions)

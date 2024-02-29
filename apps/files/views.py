@@ -1,16 +1,34 @@
 from os import remove as delete_file
 
 from django.http import Http404
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.files.models import File
+from apps.files.serializer import FileSerializerCreate
 from apps.files.utils import upload_file
 from config.utils.api_exceptions import APIValidation
 
 
 class FileCreateAPIView(APIView):
+    parser_classes = [MultiPartParser, ]
+
+    @swagger_auto_schema(
+        request_body=FileSerializerCreate,
+        operation_description="Upload file",
+        manual_parameters=[
+            openapi.Parameter(
+                'file', in_=openapi.IN_FORM,
+                type=openapi.TYPE_FILE,
+                required=True,
+                description='The file to upload (max size 20MB)'
+            ),
+        ]
+    )
     def post(self, request):
         if request.FILES:
             file = request.data.get('file')

@@ -125,6 +125,7 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
 MODELTRANSLATION_AUTO_FIELDS = False
 
 LANGUAGE_CODE = 'en-us'
+DEFAULT_LANGUAGE = 'en'
 LANGUAGES = [
     ('en', _('English')),
     ('uz', _('Uzbek')),
