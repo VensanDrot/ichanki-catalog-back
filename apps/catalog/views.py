@@ -2,9 +2,10 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.parsers import MultiPartParser
 from rest_framework.viewsets import ModelViewSet
 
-from apps.catalog.models import Category, Color, Size, Catalog
+from apps.catalog.models import Category, Color, Size, Catalog, Specification
 from apps.catalog.serializer import GetCategorySerializer, GetColorSerializer, GetSizeSerializer, \
-    PostCategorySerializer, PostSizeSerializer, PostColorSerializer, GetCatalogSerializer, PostCatalogSerializer
+    PostCategorySerializer, PostSizeSerializer, PostColorSerializer, GetCatalogSerializer, PostCatalogSerializer, \
+    PostSpecificationSerializer, GetSpecificationSerializer
 from config.utils.permissions import LandingPage
 
 
@@ -86,7 +87,6 @@ class SizeModelViewSet(ModelViewSet):
 class CatalogModelViewSet(ModelViewSet):
     queryset = Catalog.objects.all()
     serializer_class = GetCatalogSerializer
-    # parser_classes = (MultiPartParser,)
     permission_classes = (LandingPage,)
 
     @swagger_auto_schema(request_body=PostCatalogSerializer)
@@ -106,4 +106,29 @@ class CatalogModelViewSet(ModelViewSet):
         elif self.action == 'partial_update':
             return PostCatalogSerializer(self.get_object(), data=kwargs.get('data'),
                                          context={'request': self.request}, partial=True)
+        return super().get_serializer(*args, **kwargs)
+
+
+class SpecificationModelViewSet(ModelViewSet):
+    queryset = Specification.objects.all()
+    serializer_class = GetSpecificationSerializer
+    permission_classes = (LandingPage,)
+
+    @swagger_auto_schema(request_body=PostSpecificationSerializer)
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(request_body=PostSpecificationSerializer)
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+    def get_serializer(self, *args, **kwargs):
+        if self.action == 'create':
+            return PostSpecificationSerializer(data=kwargs.get('data'), context={'request': self.request})
+        elif self.action == 'update':
+            return PostSpecificationSerializer(self.get_object(), data=kwargs.get('data'),
+                                               context={'request': self.request})
+        elif self.action == 'partial_update':
+            return PostSpecificationSerializer(self.get_object(), data=kwargs.get('data'),
+                                               context={'request': self.request}, partial=True)
         return super().get_serializer(*args, **kwargs)

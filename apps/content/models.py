@@ -18,4 +18,3 @@ class News(BaseModel):
 class Article(BaseModel):
     class Meta:
         db_table = 'Article'
-# TODO: end this models.py

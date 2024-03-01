@@ -1,5 +1,11 @@
 from rest_framework import serializers
 
+from apps.files.models import File
 
-class FileSerializerCreate(serializers.BaseSerializer):
-    file = serializers.FileField(required=True)
+
+class FileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = File
+        fields = ['id',
+                  'path',
+                  'name', ]

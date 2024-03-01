@@ -4,7 +4,7 @@ from .models import News
 
 
 class NewsTranslationOptions(TranslationOptions):
-    fields = ('title', 'description',)
+    fields = ('title', 'description', 'content',)
 
 
 translator.register(News, NewsTranslationOptions)

@@ -44,7 +44,7 @@ class Specification(BaseModel):
     is_active = models.BooleanField('is active', default=True)
     vendor_code = models.CharField('vendor code', max_length=100)
     price = models.FloatField('price')
-    discount = models.FloatField('discount')
+    discount = models.FloatField('discount', null=True, blank=True)
 
     miniature = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True,
                                   related_name='miniature_specs', verbose_name='miniature')
