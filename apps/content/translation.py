@@ -1,6 +1,6 @@
 from modeltranslation.translator import TranslationOptions, translator
 
-from .models import News
+from .models import News, Article
 
 
 class NewsTranslationOptions(TranslationOptions):
@@ -8,3 +8,4 @@ class NewsTranslationOptions(TranslationOptions):
 
 
 translator.register(News, NewsTranslationOptions)
+translator.register(Article, NewsTranslationOptions)

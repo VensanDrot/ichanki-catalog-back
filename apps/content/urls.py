@@ -1,10 +1,10 @@
-from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from apps.content.views import NewsModelViewSet
+from apps.content.views import NewsModelViewSet, ArticleModelViewSet
 
 router = DefaultRouter()
 router.register(r'news', NewsModelViewSet, basename='news')
+router.register(r'article', ArticleModelViewSet, basename='news')
 
 app_name = 'content'
 urlpatterns = [

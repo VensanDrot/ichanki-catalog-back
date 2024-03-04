@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.content.models import News
+from apps.content.models import News, Article
 from config.models import BaseModel
 
 
@@ -13,6 +13,7 @@ class File(BaseModel):
     extension = models.CharField(max_length=30, null=True)
 
     news = models.ForeignKey(News, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
+    article = models.ForeignKey(Article, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
 
     class Meta:
         db_table = "File"
