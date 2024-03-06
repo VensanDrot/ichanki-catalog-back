@@ -1,6 +1,5 @@
 from django.db import models
 
-from apps.files.models import File
 from config.models import BaseModel
 
 
@@ -33,7 +32,7 @@ class Catalog(BaseModel):
     name = models.CharField('name', max_length=155)
     description = models.TextField('description', null=True, blank=True)
 
-    file = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True, related_name='catalogs')
+    file = models.ForeignKey('files.File', on_delete=models.SET_NULL, null=True, blank=True, related_name='catalogs')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='category', related_name='catalogs')
 
     class Meta:
@@ -46,10 +45,11 @@ class Specification(BaseModel):
     price = models.FloatField('price')
     discount = models.FloatField('discount', null=True, blank=True)
 
-    miniature = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True,
+    miniature = models.ForeignKey('files.File', on_delete=models.SET_NULL, null=True, blank=True,
                                   related_name='miniature_specs', verbose_name='miniature')
-    photo = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True,
-                              related_name='photo_specs', verbose_name='photo')
+    # photos ForeignKey inside File model
+    # photo = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True,
+    #                           related_name='photo_specs', verbose_name='photo')
     catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE, verbose_name='catalog', related_name='specs')
     size = models.ForeignKey(Size, on_delete=models.CASCADE, verbose_name='size', related_name='specs')
     color = models.ForeignKey(Color, on_delete=models.CASCADE, verbose_name='color', related_name='specs')

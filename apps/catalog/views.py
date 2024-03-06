@@ -1,15 +1,14 @@
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.parsers import MultiPartParser
-from rest_framework.viewsets import ModelViewSet
 
 from apps.catalog.models import Category, Color, Size, Catalog, Specification
 from apps.catalog.serializer import GetCategorySerializer, GetColorSerializer, GetSizeSerializer, \
     PostCategorySerializer, PostSizeSerializer, PostColorSerializer, GetCatalogSerializer, PostCatalogSerializer, \
     PostSpecificationSerializer, GetSpecificationSerializer
 from config.utils.permissions import LandingPage
+from config.views import ModelViewSetPack
 
 
-class CategoryModelViewSet(ModelViewSet):
+class CategoryModelViewSet(ModelViewSetPack):
     queryset = Category.objects.all()
     serializer_class = GetCategorySerializer
     permission_classes = (LandingPage,)
@@ -34,7 +33,7 @@ class CategoryModelViewSet(ModelViewSet):
         return super().get_serializer(*args, **kwargs)
 
 
-class ColorModelViewSet(ModelViewSet):
+class ColorModelViewSet(ModelViewSetPack):
     queryset = Color.objects.all()
     serializer_class = GetColorSerializer
     permission_classes = (LandingPage,)
@@ -59,7 +58,7 @@ class ColorModelViewSet(ModelViewSet):
         return super().get_serializer(*args, **kwargs)
 
 
-class SizeModelViewSet(ModelViewSet):
+class SizeModelViewSet(ModelViewSetPack):
     queryset = Size.objects.all()
     serializer_class = GetSizeSerializer
     permission_classes = (LandingPage,)
@@ -84,7 +83,7 @@ class SizeModelViewSet(ModelViewSet):
         return super().get_serializer(*args, **kwargs)
 
 
-class CatalogModelViewSet(ModelViewSet):
+class CatalogModelViewSet(ModelViewSetPack):
     queryset = Catalog.objects.all()
     serializer_class = GetCatalogSerializer
     permission_classes = (LandingPage,)
@@ -109,7 +108,7 @@ class CatalogModelViewSet(ModelViewSet):
         return super().get_serializer(*args, **kwargs)
 
 
-class SpecificationModelViewSet(ModelViewSet):
+class SpecificationModelViewSet(ModelViewSetPack):
     queryset = Specification.objects.all()
     serializer_class = GetSpecificationSerializer
     permission_classes = (LandingPage,)

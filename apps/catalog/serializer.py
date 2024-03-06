@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
 from apps.catalog.models import Size, Color, Category, Catalog, Specification
+from apps.files.models import File
+from apps.files.serializer import FileSerializer
 
 
 class GetCategorySerializer(serializers.ModelSerializer):
@@ -75,10 +77,10 @@ class PostCatalogSerializer(serializers.ModelSerializer):
 
 class GetSpecificationSerializer(serializers.ModelSerializer):
     miniature = serializers.CharField(source='miniature.path')
-    photo = serializers.CharField(source='photo.path')
     catalog = serializers.CharField(source='catalog.name')
     size = serializers.CharField(source='size.name')
     color = serializers.CharField(source='color.name')
+    files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
 
     class Meta:
         model = Specification
@@ -87,13 +89,15 @@ class GetSpecificationSerializer(serializers.ModelSerializer):
                   'price',
                   'discount',
                   'miniature',
-                  'photo',
                   'catalog',
                   'size',
-                  'color', ]
+                  'color',
+                  'files', ]
 
 
 class PostSpecificationSerializer(serializers.ModelSerializer):
+    files = serializers.SlugRelatedField(slug_field='id', many=True, queryset=File.objects.all())
+
     class Meta:
         model = Specification
         fields = ['is_active',
@@ -101,7 +105,7 @@ class PostSpecificationSerializer(serializers.ModelSerializer):
                   'price',
                   'discount',
                   'miniature',
-                  'photo',
                   'catalog',
                   'size',
-                  'color', ]
+                  'color',
+                  'files', ]

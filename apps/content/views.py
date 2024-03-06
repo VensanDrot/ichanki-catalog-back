@@ -1,12 +1,12 @@
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.viewsets import ModelViewSet
 
 from apps.content.models import News, Article
 from apps.content.serializer import GetNewsSerializer, PostNewsSerializer, GetArticleSerializer, PostArticleSerializer
 from config.utils.permissions import LandingPage
+from config.views import ModelViewSetPack
 
 
-class NewsModelViewSet(ModelViewSet):
+class NewsModelViewSet(ModelViewSetPack):
     queryset = News.objects.all()
     serializer_class = GetNewsSerializer
     permission_classes = (LandingPage,)
@@ -31,7 +31,7 @@ class NewsModelViewSet(ModelViewSet):
         return super().get_serializer(*args, **kwargs)
 
 
-class ArticleModelViewSet(ModelViewSet):
+class ArticleModelViewSet(ModelViewSetPack):
     queryset = Article.objects.all()
     serializer_class = GetArticleSerializer
     permission_classes = (LandingPage,)
