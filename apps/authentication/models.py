@@ -1,8 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from config.models import BaseModel
 
-class User(AbstractUser):
+
+class User(AbstractUser, BaseModel):
     first_name = None
     last_name = None
 

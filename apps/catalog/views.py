@@ -11,6 +11,7 @@ from config.views import ModelViewSetPack
 class CategoryModelViewSet(ModelViewSetPack):
     queryset = Category.objects.all()
     serializer_class = GetCategorySerializer
+    post_serializer_class = PostCategorySerializer
     permission_classes = (LandingPage,)
 
     @swagger_auto_schema(request_body=PostCategorySerializer)
@@ -20,17 +21,6 @@ class CategoryModelViewSet(ModelViewSetPack):
     @swagger_auto_schema(request_body=PostCategorySerializer)
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
-
-    def get_serializer(self, *args, **kwargs):
-        if self.action == 'create':
-            return PostCategorySerializer(data=kwargs.get('data'), context={'request': self.request})
-        elif self.action == 'update':
-            return PostCategorySerializer(self.get_object(), data=kwargs.get('data'),
-                                          context={'request': self.request})
-        elif self.action == 'partial_update':
-            return PostCategorySerializer(self.get_object(), data=kwargs.get('data'),
-                                          context={'request': self.request}, partial=True)
-        return super().get_serializer(*args, **kwargs)
 
 
 class ColorModelViewSet(ModelViewSetPack):

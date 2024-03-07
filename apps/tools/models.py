@@ -24,7 +24,9 @@ class District(BaseModel):
         db_table = 'District'
 
 
-class ActionLog(BaseModel):
+class ActionLog(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+
     CREATE = 'CREATE'
     CONFIRM = 'CONFIRM'
     EDIT = 'EDIT'
@@ -35,10 +37,11 @@ class ActionLog(BaseModel):
         (EDIT, _('Edit')),
         (DELETE, _('Delete'))
     ]
+    uuid = models.UUIDField(null=True, blank=True)
     action = models.CharField(max_length=7, choices=ACTION_CHOICES, null=True, blank=True)
-    username = models.CharField(max_length=50)
-    section = models.CharField(max_length=255)
-    item = models.CharField(max_length=255)
+    username = models.CharField(max_length=50, null=True)
+    section = models.CharField(max_length=255, null=True)
+    item = models.CharField(max_length=255, null=True)
 
     class Meta:
         db_table = 'ActionLog'
