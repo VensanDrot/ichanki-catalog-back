@@ -2,7 +2,7 @@ import uuid
 
 
 from apps.tools.models import ActionLog
-from apps.tools.utils.signals import create_log
+from apps.tools.utils.logs import create_log
 
 
 class ActionLoggingMiddleware:

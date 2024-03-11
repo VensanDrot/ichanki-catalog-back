@@ -1,8 +1,5 @@
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
 from rest_framework.viewsets import ModelViewSet
-from apps.tools.models import ActionLog
-from apps.tools.utils.signals import update_log
+from apps.tools.utils.logs import update_log
 
 
 class ModelViewSetPack(ModelViewSet):

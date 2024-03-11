@@ -9,6 +9,7 @@ from config.views import ModelViewSetPack
 class StoreModelViewSet(ModelViewSetPack):
     queryset = Store.objects.all()
     serializer_class = GetStoreSerializer
+    post_serializer_class = PostStoreSerializer
     permission_classes = (LandingPage,)
     http_method_names = ['patch', 'post', 'get', 'delete']
 
@@ -19,14 +20,3 @@ class StoreModelViewSet(ModelViewSetPack):
     @swagger_auto_schema(request_body=PostStoreSerializer)
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
-
-    def get_serializer(self, *args, **kwargs):
-        if self.action == 'create':
-            return PostStoreSerializer(data=kwargs.get('data'), context={'request': self.request})
-        elif self.action == 'update':
-            return PostStoreSerializer(self.get_object(), data=kwargs.get('data'),
-                                       context={'request': self.request})
-        elif self.action == 'partial_update':
-            return PostStoreSerializer(self.get_object(), data=kwargs.get('data'),
-                                       context={'request': self.request}, partial=True)
-        return super().get_serializer(*args, **kwargs)

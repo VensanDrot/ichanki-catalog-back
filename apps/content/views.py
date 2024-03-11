@@ -9,6 +9,7 @@ from config.views import ModelViewSetPack
 class NewsModelViewSet(ModelViewSetPack):
     queryset = News.objects.all()
     serializer_class = GetNewsSerializer
+    post_serializer_class = PostNewsSerializer
     permission_classes = (LandingPage,)
 
     @swagger_auto_schema(request_body=PostNewsSerializer)
@@ -18,22 +19,12 @@ class NewsModelViewSet(ModelViewSetPack):
     @swagger_auto_schema(request_body=PostNewsSerializer)
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
-
-    def get_serializer(self, *args, **kwargs):
-        if self.action == 'create':
-            return PostNewsSerializer(data=kwargs.get('data'), context={'request': self.request})
-        elif self.action == 'update':
-            return PostNewsSerializer(self.get_object(), data=kwargs.get('data'),
-                                      context={'request': self.request})
-        elif self.action == 'partial_update':
-            return PostNewsSerializer(self.get_object(), data=kwargs.get('data'),
-                                      context={'request': self.request}, partial=True)
-        return super().get_serializer(*args, **kwargs)
 
 
 class ArticleModelViewSet(ModelViewSetPack):
     queryset = Article.objects.all()
     serializer_class = GetArticleSerializer
+    post_serializer_class = PostArticleSerializer
     permission_classes = (LandingPage,)
 
     @swagger_auto_schema(request_body=PostArticleSerializer)
@@ -43,14 +34,3 @@ class ArticleModelViewSet(ModelViewSetPack):
     @swagger_auto_schema(request_body=PostArticleSerializer)
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
-
-    def get_serializer(self, *args, **kwargs):
-        if self.action == 'create':
-            return PostArticleSerializer(data=kwargs.get('data'), context={'request': self.request})
-        elif self.action == 'update':
-            return PostArticleSerializer(self.get_object(), data=kwargs.get('data'),
-                                         context={'request': self.request})
-        elif self.action == 'partial_update':
-            return PostArticleSerializer(self.get_object(), data=kwargs.get('data'),
-                                         context={'request': self.request}, partial=True)
-        return super().get_serializer(*args, **kwargs)
