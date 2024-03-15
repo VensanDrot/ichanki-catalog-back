@@ -39,30 +39,36 @@ class GetSizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Size
         fields = ['id',
-                  'name']
+                  'list',
+                  'roll', ]
 
 
 class PostSizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Size
-        fields = ['name_uz',
-                  'name_ru',
-                  'name_en', ]
+        fields = ['list_uz',
+                  'list_ru',
+                  'list_en',
+                  'roll_uz',
+                  'roll_ru',
+                  'roll_en', ]
 
 
 class GetCatalogSerializer(serializers.ModelSerializer):
-    file = serializers.CharField(source='file.path')
+    files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
 
     class Meta:
         model = Catalog
         fields = ['id',
                   'name',
                   'description',
-                  'file',
+                  'files',
                   'category', ]
 
 
 class PostCatalogSerializer(serializers.ModelSerializer):
+    files = serializers.SlugRelatedField(slug_field='id', many=True, queryset=File.objects.all())
+
     class Meta:
         model = Catalog
         fields = ['name_uz',
@@ -71,14 +77,15 @@ class PostCatalogSerializer(serializers.ModelSerializer):
                   'description_uz',
                   'description_ru',
                   'description_en',
-                  'file',
+                  'files',
                   'category', ]
 
 
 class GetSpecificationSerializer(serializers.ModelSerializer):
-    miniature = serializers.CharField(source='miniature.path')
+    miniature = serializers.CharField(source='miniature.path', allow_null=True)
     catalog = serializers.CharField(source='catalog.name')
-    size = serializers.CharField(source='size.name')
+    roll = serializers.CharField(source='size.roll')
+    list = serializers.CharField(source='size.list')
     color = serializers.CharField(source='color.name')
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
 
@@ -90,7 +97,8 @@ class GetSpecificationSerializer(serializers.ModelSerializer):
                   'discount',
                   'miniature',
                   'catalog',
-                  'size',
+                  'roll',
+                  'list',
                   'color',
                   'files', ]
 

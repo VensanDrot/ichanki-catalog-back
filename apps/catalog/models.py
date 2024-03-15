@@ -23,7 +23,10 @@ class Color(BaseModelName):
         db_table = 'Color'
 
 
-class Size(BaseModelName):
+class Size(BaseModel):
+    list = models.CharField('name', max_length=155)
+    roll = models.CharField('name', max_length=155)
+
     class Meta:
         db_table = 'Size'
 
@@ -31,8 +34,9 @@ class Size(BaseModelName):
 class Catalog(BaseModel):
     name = models.CharField('name', max_length=155)
     description = models.TextField('description', null=True, blank=True)
+    material = models.CharField('material', max_length=100, null=True, blank=True)
+    shape = models.CharField('material', max_length=55, null=True, blank=True)
 
-    file = models.ForeignKey('files.File', on_delete=models.SET_NULL, null=True, blank=True, related_name='catalogs')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='category', related_name='catalogs')
 
     class Meta:

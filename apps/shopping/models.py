@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from apps.authentication.models import User
+from apps.catalog.models import Specification
 from apps.tools.models import Region
 from config.models import BaseModel
 
@@ -16,10 +17,20 @@ class Store(BaseModel):
     map_link = models.TextField('map link', null=True, blank=True)
 
     region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, blank=True, related_name='stores')
+
     # photos ForeignKey inside File model
 
     class Meta:
         db_table = 'Store'
+
+
+class OrderedProduct(BaseModel):
+    quantity = models.SmallIntegerField(default=1)
+    product = models.ForeignKey(Specification, on_delete=models.SET_NULL, null=True, blank=True,
+                                related_name='ordered_products')
+
+    class Meta:
+        db_table = 'OrderedProduct'
 
 
 class Application(BaseModel):
@@ -49,6 +60,8 @@ class Application(BaseModel):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='applications')
     store = models.ForeignKey(Store, on_delete=models.SET_NULL, null=True, blank=True, related_name='applications')
     region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, blank=True, related_name='applications')
+    ordered_product = models.ManyToManyField(OrderedProduct, on_delete=models.SET_NULL, null=True, blank=True,
+                                             related_name='applications')
 
     class Meta:
         db_table = 'Application'
