@@ -1,7 +1,8 @@
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.generics import CreateAPIView
 
-from apps.shopping.models import Store
-from apps.shopping.serializer import GetStoreSerializer, PostStoreSerializer
+from apps.shopping.models import Store, Application
+from apps.shopping.serializer import GetStoreSerializer, PostStoreSerializer, GiveApplicationSerializer
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
 
@@ -20,3 +21,8 @@ class StoreModelViewSet(ModelViewSetPack):
     @swagger_auto_schema(request_body=PostStoreSerializer)
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
+
+
+class GiveApplicationAPIView(CreateAPIView):
+    queryset = Application.objects.all()
+    serializer_class = GiveApplicationSerializer

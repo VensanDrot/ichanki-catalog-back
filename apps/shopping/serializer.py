@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from apps.files.models import File
 from apps.files.serializer import FileSerializer
-from apps.shopping.models import Store
+from apps.shopping.models import Store, Application, OrderedProduct
 
 
 class GetStoreSerializer(serializers.ModelSerializer):
@@ -39,3 +39,34 @@ class PostStoreSerializer(serializers.ModelSerializer):
                   'map_link',
                   'region',
                   'files', ]
+
+
+class OrderedProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderedProduct
+        fields = ['quantity',
+                  'product', ]
+
+
+class GiveApplicationSerializer(serializers.ModelSerializer):
+    order = OrderedProductSerializer(many=True, allow_null=True, source='ordered_product')
+
+    def create(self, validated_data):
+        ordered_products = validated_data.pop('ordered_product', [])
+        obj: Application = super().create(validated_data)
+        for ordered_product in ordered_products:
+            order = OrderedProduct.objects.create(**ordered_product)
+            obj.ordered_product.add(order)
+        return obj
+
+    class Meta:
+        model = Application
+        fields = ['fullname',
+                  'phone_number',
+                  'delivery_pickup',
+                  'region',
+                  'address',
+                  'comment',
+                  'total_price',
+                  'delivery_price',
+                  'order', ]
