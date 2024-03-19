@@ -165,6 +165,11 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'config.utils.api_exceptions.uni_exception_handler',
 }
 
+# CRONJOB
+CRONJOBS = [
+    ('0 0 * * 0', "apps.tools.cron.task.unused_files"),  # Delete unused files
+]
+
 # Swagger
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
