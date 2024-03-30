@@ -61,7 +61,7 @@ class Application(BaseModel):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='applications')
     store = models.ForeignKey(Store, on_delete=models.SET_NULL, null=True, blank=True, related_name='applications')
     region = models.ForeignKey(Region, on_delete=models.SET_NULL, null=True, blank=True, related_name='applications')
-    ordered_product = models.ManyToManyField(OrderedProduct, null=True, blank=True, related_name='applications')
+    ordered_product = models.ManyToManyField(OrderedProduct, related_name='applications')
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if not self.id:

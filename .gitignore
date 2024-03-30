@@ -8,3 +8,4 @@ locale/
 server.log
 /g_config.py
 logs/
+static/
