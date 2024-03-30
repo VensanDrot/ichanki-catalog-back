@@ -4,7 +4,7 @@ from apps.content.views import NewsModelViewSet, ArticleModelViewSet
 
 router = DefaultRouter()
 router.register(r'news', NewsModelViewSet, basename='news')
-router.register(r'article', ArticleModelViewSet, basename='news')
+router.register(r'article', ArticleModelViewSet, basename='article')
 
 app_name = 'content'
 urlpatterns = [
