@@ -117,3 +117,35 @@ class PostSpecificationSerializer(serializers.ModelSerializer):
                   'size',
                   'color',
                   'files', ]
+
+
+class ProductSpecificationSerializer(serializers.ModelSerializer):
+    miniature = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+    color = serializers.CharField(source='color.name')
+    size_list = serializers.CharField(source='size.list')
+    size_roll = serializers.CharField(source='size.roll')
+
+    class Meta:
+        model = Specification
+        fields = ['price',
+                  'discount',
+                  'color',
+                  'size_list',
+                  'size_roll',
+                  'vendor_code',
+                  'miniature', ]
+
+
+class SearchProductSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+    category = serializers.CharField(source='category.name')
+    specs = ProductSpecificationSerializer(many=True, allow_null=True)
+
+    class Meta:
+        model = Catalog
+        fields = ['id',
+                  'name',
+                  'description',
+                  'files',
+                  'category',
+                  'specs', ]

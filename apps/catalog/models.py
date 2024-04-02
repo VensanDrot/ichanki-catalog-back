@@ -24,8 +24,8 @@ class Color(BaseModelName):
 
 
 class Size(BaseModel):
-    list = models.CharField('name', max_length=155)
-    roll = models.CharField('name', max_length=155)
+    list = models.CharField('list', max_length=155)
+    roll = models.CharField('roll', max_length=155)
 
     class Meta:
         db_table = 'Size'
@@ -35,12 +35,15 @@ class Catalog(BaseModel):
     name = models.CharField('name', max_length=155)
     description = models.TextField('description', null=True, blank=True)
     material = models.CharField('material', max_length=100, null=True, blank=True)
-    shape = models.CharField('material', max_length=55, null=True, blank=True)
+    shape = models.CharField('shape', max_length=55, null=True, blank=True)
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='category', related_name='catalogs')
 
     class Meta:
         db_table = 'Catalog'
+
+    def __str__(self):
+        return self.name
 
 
 class Specification(BaseModel):

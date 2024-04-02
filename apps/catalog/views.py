@@ -1,9 +1,14 @@
+from drf_yasg.openapi import Parameter, TYPE_STRING, IN_QUERY
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import AllowAny
 
+from apps.catalog.filters import ProductFilter
 from apps.catalog.models import Category, Color, Size, Catalog, Specification
 from apps.catalog.serializer import GetCategorySerializer, GetColorSerializer, GetSizeSerializer, \
     PostCategorySerializer, PostSizeSerializer, PostColorSerializer, GetCatalogSerializer, PostCatalogSerializer, \
-    PostSpecificationSerializer, GetSpecificationSerializer
+    PostSpecificationSerializer, GetSpecificationSerializer, SearchProductSerializer
+from config.utils.pagination import APIPagination
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
 
@@ -81,3 +86,20 @@ class SpecificationModelViewSet(ModelViewSetPack):
     @swagger_auto_schema(request_body=PostSpecificationSerializer)
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
+
+
+class SearchProductsAPIView(ListAPIView):
+    queryset = Catalog.objects.distinct('id')
+    serializer_class = SearchProductSerializer
+    filterset_class = ProductFilter
+    pagination_class = APIPagination
+    permission_classes = [AllowAny, ]
+
+    @swagger_auto_schema(manual_parameters=[
+        Parameter('category', IN_QUERY, description="Category filter", type=TYPE_STRING),
+        Parameter('color', IN_QUERY, description="Color filter", type=TYPE_STRING),
+        Parameter('size_roll', IN_QUERY, description="Size roll filter", type=TYPE_STRING),
+        Parameter('size_list', IN_QUERY, description="Size list filter", type=TYPE_STRING),
+    ])
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
