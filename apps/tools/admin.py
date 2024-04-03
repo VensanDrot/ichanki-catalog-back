@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.tools.models import Region, District, ActionLog
+
+admin.site.register(Region)
+admin.site.register(District)
+admin.site.register(ActionLog)
