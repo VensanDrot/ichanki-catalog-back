@@ -1,5 +1,7 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.openapi import Parameter, TYPE_STRING, IN_QUERY
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 
@@ -94,6 +96,9 @@ class SearchProductsAPIView(ListAPIView):
     filterset_class = ProductFilter
     pagination_class = APIPagination
     permission_classes = [AllowAny, ]
+    filter_backends = [DjangoFilterBackend, SearchFilter, ]
+    search_fields = ['name', 'category__name', 'specs__vendor_code', 'specs__color__name', 'specs__size__list',
+                     'specs__size__roll']
 
     @swagger_auto_schema(manual_parameters=[
         Parameter('category', IN_QUERY, description="Category filter", type=TYPE_STRING),
