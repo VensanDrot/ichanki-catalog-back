@@ -9,7 +9,7 @@ from apps.catalog.filters import ProductFilter
 from apps.catalog.models import Category, Color, Size, Catalog, Specification
 from apps.catalog.serializer import GetCategorySerializer, GetColorSerializer, GetSizeSerializer, \
     PostCategorySerializer, PostSizeSerializer, PostColorSerializer, GetCatalogSerializer, PostCatalogSerializer, \
-    PostSpecificationSerializer, GetSpecificationSerializer, SearchProductSerializer
+    PostSpecificationSerializer, GetSpecificationSerializer, SearchProductSerializer, RetrieveCatalogSerializer
 from config.utils.pagination import APIPagination
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
@@ -65,6 +65,11 @@ class CatalogModelViewSet(ModelViewSetPack):
     serializer_class = GetCatalogSerializer
     post_serializer_class = PostCatalogSerializer
     permission_classes = (LandingPage,)
+
+    def get_serializer(self, *args, **kwargs):
+        if self.action == 'retrieve':
+            return RetrieveCatalogSerializer(args[0])
+        return super().get_serializer(*args, **kwargs)
 
     @swagger_auto_schema(request_body=PostCatalogSerializer)
     def update(self, request, *args, **kwargs):

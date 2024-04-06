@@ -13,6 +13,6 @@ router.register(r'specification', SpecificationModelViewSet, basename='specifica
 
 app_name = 'catalog'
 urlpatterns = [
-    path('products-search/', SearchProductsAPIView.as_view(), name='products_search')
+    path('products-search/', SearchProductsAPIView.as_view(), name='products_search'),
 ]
 urlpatterns += router.urls

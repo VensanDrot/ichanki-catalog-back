@@ -94,7 +94,8 @@ class GetSpecificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Specification
-        fields = ['is_active',
+        fields = ['id',
+                  'is_active',
                   'vendor_code',
                   'price',
                   'discount',
@@ -144,11 +145,34 @@ class SearchProductSerializer(serializers.ModelSerializer):
     category = serializers.CharField(source='category.name')
     specs = ProductSpecificationSerializer(many=True, allow_null=True)
 
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        active_specs = instance.specs.filter(is_active=True)
+        representation['specs'] = ProductSpecificationSerializer(active_specs, many=True).data
+        return representation
+
     class Meta:
         model = Catalog
         fields = ['id',
                   'name',
                   'description',
                   'files',
+                  'category',
+                  'specs', ]
+
+
+class RetrieveCatalogSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+    category = serializers.CharField(source='category.name', read_only=True)
+    specs = GetSpecificationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Catalog
+        fields = ['id',
+                  'name',
+                  'description',
+                  'files',
+                  'shape',
+                  'material',
                   'category',
                   'specs', ]
