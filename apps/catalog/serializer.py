@@ -56,6 +56,7 @@ class PostSizeSerializer(serializers.ModelSerializer):
 
 class GetCatalogSerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+    category = serializers.CharField(source='category.name', read_only=True)
 
     class Meta:
         model = Catalog
@@ -63,6 +64,8 @@ class GetCatalogSerializer(serializers.ModelSerializer):
                   'name',
                   'description',
                   'files',
+                  'shape',
+                  'material',
                   'category', ]
 
 
