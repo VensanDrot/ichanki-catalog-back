@@ -1,8 +1,10 @@
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 
 from apps.shopping.models import Store, Application
-from apps.shopping.serializer import GetStoreSerializer, PostStoreSerializer, GiveApplicationSerializer
+from apps.shopping.serializer import GetStoreSerializer, PostStoreSerializer, GiveApplicationSerializer, \
+    ApplicationListSerializer
+from config.utils.pagination import APIPagination
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
 
@@ -26,3 +28,10 @@ class StoreModelViewSet(ModelViewSetPack):
 class GiveApplicationAPIView(CreateAPIView):
     queryset = Application.objects.all()
     serializer_class = GiveApplicationSerializer
+
+
+class ApplicationListAPIView(ListAPIView):
+    queryset = Application.objects.all()
+    serializer_class = ApplicationListSerializer
+    pagination_class = APIPagination
+# TODO: end filters here

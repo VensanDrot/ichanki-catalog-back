@@ -70,3 +70,25 @@ class GiveApplicationSerializer(serializers.ModelSerializer):
                   'total_price',
                   'delivery_price',
                   'order', ]
+
+
+class ApplicationListSerializer(serializers.ModelSerializer):
+    sender_language = serializers.CharField(source='get_sender_language_display')
+    delivery_pickup = serializers.CharField(source='get_delivery_pickup_display')
+    status = serializers.CharField(source='get_status_display')
+    store = serializers.CharField(source='store.name')
+
+    class Meta:
+        model = Application
+        fields = ['id',
+                  'fullname',
+                  'phone_number',
+                  'sender_language',
+                  'delivery_pickup',
+                  'region',
+                  'address',
+                  'comment',
+                  'total_price',
+                  'delivery_price',
+                  'store',
+                  'status', ]
