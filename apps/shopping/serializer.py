@@ -73,10 +73,10 @@ class GiveApplicationSerializer(serializers.ModelSerializer):
 
 
 class ApplicationListSerializer(serializers.ModelSerializer):
-    sender_language = serializers.CharField(source='get_sender_language_display')
-    delivery_pickup = serializers.CharField(source='get_delivery_pickup_display')
-    status = serializers.CharField(source='get_status_display')
-    store = serializers.CharField(source='store.name')
+    sender_language = serializers.CharField(source='get_sender_language_display', allow_null=True)
+    delivery_pickup = serializers.CharField(source='get_delivery_pickup_display', allow_null=True)
+    status = serializers.CharField(source='get_status_display', allow_null=True)
+    store = serializers.CharField(source='store.name', allow_null=True)
 
     class Meta:
         model = Application

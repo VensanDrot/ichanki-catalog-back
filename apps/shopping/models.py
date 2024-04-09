@@ -33,23 +33,24 @@ class OrderedProduct(BaseModel):
         db_table = 'OrderedProduct'
 
 
-class Application(BaseModel):
-    DELIVERY = 'DELIVERY'
-    PICKUP = 'PICKUP'
-    DELIVERY_PICKUP_CHOICES = [
-        (DELIVERY, _('Delivery')),
-        (PICKUP, _('Pickup'))
-    ]
-    ACCEPTED = 'ACCEPTED'
-    PROCESSED = 'PROCESSED'
-    STATUS_CHOICES = [
-        (ACCEPTED, _('Accepted')),
-        (PROCESSED, _('Processed'))
-    ]
+DELIVERY = 'DELIVERY'
+PICKUP = 'PICKUP'
+DELIVERY_PICKUP_CHOICES = [
+    (DELIVERY, _('Delivery')),
+    (PICKUP, _('Pickup'))
+]
+ACCEPTED = 'ACCEPTED'
+PROCESSED = 'PROCESSED'
+STATUS_CHOICES = [
+    (ACCEPTED, _('Accepted')),
+    (PROCESSED, _('Processed'))
+]
 
+
+class Application(BaseModel):
     fullname = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=30)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=ACCEPTED)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PROCESSED)
     comment = models.TextField(null=True, blank=True)
     sender_language = models.CharField(max_length=2, choices=settings.LANGUAGES)
     delivery_pickup = models.CharField(max_length=8, choices=DELIVERY_PICKUP_CHOICES, default=DELIVERY)
