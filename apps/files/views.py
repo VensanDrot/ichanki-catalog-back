@@ -44,10 +44,10 @@ class FileCreateAPIView(APIView):
 
         is_miniature = int(request.query_params.get('miniature', 0))
 
-        # if 'image' in file.content_type:
-        #     dimensions = get_image_dimensions(file)  # (width, height)
-        #     if dimensions != (100, 100) and is_miniature:
-        #         raise APIValidation(detail=_('Image dimensions should be 100x100'), code=status.HTTP_400_BAD_REQUEST)
+        if 'image' in file.content_type:
+            dimensions = get_image_dimensions(file)  # (width, height)
+            if dimensions != (100, 100) and is_miniature:
+                raise APIValidation(detail=_('Image dimensions should be 100x100'), code=status.HTTP_400_BAD_REQUEST)
 
         if file.size > 52_428_800:
             raise APIValidation(detail=_('The file size has exceeded 50 mb!'), code=status.HTTP_400_BAD_REQUEST)
