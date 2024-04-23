@@ -116,11 +116,6 @@ class SpecificationModelViewSet(ModelViewSetPack):
         return super().partial_update(request, *args, **kwargs)
 
 
-class SpecificationRetrieveAPIView(RetrieveAPIView):
-    queryset = Specification.objects.all()
-    serializer_class = PostSpecificationSerializer
-
-
 class SearchProductsAPIView(ListAPIView):
     queryset = Catalog.objects.distinct('id')
     serializer_class = SearchProductSerializer
