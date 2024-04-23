@@ -12,6 +12,15 @@ class GetCategorySerializer(serializers.ModelSerializer):
                   'name']
 
 
+class MultiLanguageCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id',
+                  'name_uz',
+                  'name_ru',
+                  'name_en', ]
+
+
 class PostCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -176,3 +185,28 @@ class RetrieveCatalogSerializer(serializers.ModelSerializer):
                   'material',
                   'category',
                   'specs', ]
+
+
+class MultiLanguageCatalogSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+    category = MultiLanguageCategorySerializer(allow_null=True)
+    specs = GetSpecificationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Catalog
+        fields = ['id',
+                  'name_uz',
+                  'name_ru',
+                  'name_en',
+                  'description_uz',
+                  'description_ru',
+                  'description_en',
+                  'shape_uz',
+                  'shape_ru',
+                  'shape_en',
+                  'material_uz',
+                  'material_ru',
+                  'material_en',
+                  'specs',
+                  'files',
+                  'category', ]

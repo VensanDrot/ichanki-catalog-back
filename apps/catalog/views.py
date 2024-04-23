@@ -2,14 +2,15 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.openapi import Parameter, TYPE_STRING, IN_QUERY
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 
 from apps.catalog.filters import ProductFilter
 from apps.catalog.models import Category, Color, Size, Catalog, Specification
 from apps.catalog.serializer import GetCategorySerializer, GetColorSerializer, GetSizeSerializer, \
     PostCategorySerializer, PostSizeSerializer, PostColorSerializer, GetCatalogSerializer, PostCatalogSerializer, \
-    PostSpecificationSerializer, GetSpecificationSerializer, SearchProductSerializer, RetrieveCatalogSerializer
+    PostSpecificationSerializer, GetSpecificationSerializer, SearchProductSerializer, RetrieveCatalogSerializer, \
+    MultiLanguageCatalogSerializer
 from config.utils.pagination import APIPagination
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
@@ -30,6 +31,11 @@ class CategoryModelViewSet(ModelViewSetPack):
         return super().partial_update(request, *args, **kwargs)
 
 
+class CategoryRetrieveAPIView(RetrieveAPIView):
+    queryset = Category.objects.all()
+    serializer_class = PostCategorySerializer
+
+
 class ColorModelViewSet(ModelViewSetPack):
     queryset = Color.objects.all()
     serializer_class = GetColorSerializer
@@ -45,6 +51,11 @@ class ColorModelViewSet(ModelViewSetPack):
         return super().partial_update(request, *args, **kwargs)
 
 
+class ColorRetrieveAPIView(RetrieveAPIView):
+    queryset = Color.objects.all()
+    serializer_class = PostColorSerializer
+
+
 class SizeModelViewSet(ModelViewSetPack):
     queryset = Size.objects.all()
     serializer_class = GetSizeSerializer
@@ -58,6 +69,11 @@ class SizeModelViewSet(ModelViewSetPack):
     @swagger_auto_schema(request_body=PostSizeSerializer)
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
+
+
+class SizeRetrieveAPIView(RetrieveAPIView):
+    queryset = Size.objects.all()
+    serializer_class = PostSizeSerializer
 
 
 class CatalogModelViewSet(ModelViewSetPack):
@@ -80,6 +96,11 @@ class CatalogModelViewSet(ModelViewSetPack):
         return super().partial_update(request, *args, **kwargs)
 
 
+class CatalogRetrieveAPIView(RetrieveAPIView):
+    queryset = Catalog.objects.all()
+    serializer_class = MultiLanguageCatalogSerializer
+
+
 class SpecificationModelViewSet(ModelViewSetPack):
     queryset = Specification.objects.all()
     serializer_class = GetSpecificationSerializer
@@ -93,6 +114,11 @@ class SpecificationModelViewSet(ModelViewSetPack):
     @swagger_auto_schema(request_body=PostSpecificationSerializer)
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
+
+
+class SpecificationRetrieveAPIView(RetrieveAPIView):
+    queryset = Specification.objects.all()
+    serializer_class = PostSpecificationSerializer
 
 
 class SearchProductsAPIView(ListAPIView):
