@@ -11,7 +11,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="ICHANKI Swagger",
         default_version='v1',
-        description="Swagger foy ICHANKI project, token authorization: user __/auth/token/__ API then click authorize "
+        description="Swagger for ICHANKI project, token authorization: user __/auth/token/__ API then click authorize "
                     "button and type __Bearer {token}__.",
         terms_of_service="https://domen.uz/",
         contact=openapi.Contact(email="help@domen.uz"),

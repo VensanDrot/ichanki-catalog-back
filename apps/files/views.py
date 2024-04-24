@@ -6,7 +6,6 @@ from django.http import Http404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.exceptions import ValidationError
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -77,3 +76,22 @@ class FileDeleteAPIView(APIView):
             "message": "File successfully deleted",
             "status": status.HTTP_200_OK
         }, status=status.HTTP_200_OK)
+
+
+class UploadFilesAPIView(APIView):
+    @staticmethod
+    def post(request, *args, **kwargs):
+        files = request.FILES.getlist('files')
+        if not files:
+            raise APIValidation(detail=_('File was not sent'), code=status.HTTP_400_BAD_REQUEST)
+
+        response = []
+        for file in files:
+            if file.size > 52_428_800:
+                raise APIValidation(detail=_('The file size has exceeded 50 mb!'), code=status.HTTP_400_BAD_REQUEST)
+            e_file = upload_file(file=file)
+            response.append(e_file.id)
+        return Response({
+            "files": response,
+            "status": status.HTTP_201_CREATED
+        })
