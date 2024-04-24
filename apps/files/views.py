@@ -79,7 +79,21 @@ class FileDeleteAPIView(APIView):
 
 
 class UploadFilesAPIView(APIView):
+    parser_classes = [MultiPartParser, ]
+
     @staticmethod
+    @swagger_auto_schema(
+        operation_description="Upload files",
+        manual_parameters=[
+            openapi.Parameter(
+                'files', in_=openapi.IN_FORM,
+                type=openapi.TYPE_ARRAY,
+                items=openapi.Items(type=openapi.TYPE_FILE),
+                required=True,
+                description=_('The file to upload (max size 50 MB)')
+            )
+        ]
+    )
     def post(request, *args, **kwargs):
         files = request.FILES.getlist('files')
         if not files:
