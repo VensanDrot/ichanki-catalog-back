@@ -1,3 +1,4 @@
+import logging
 from os import remove as delete_file
 
 from django.core.files.images import get_image_dimensions
@@ -13,6 +14,8 @@ from rest_framework.views import APIView
 from apps.files.models import File
 from apps.files.utils import upload_file
 from config.utils.api_exceptions import APIValidation
+
+logger = logging.getLogger()
 
 
 class FileCreateAPIView(APIView):
@@ -96,6 +99,7 @@ class UploadFilesAPIView(APIView):
     )
     def post(request, *args, **kwargs):
         files = request.FILES.getlist('files')
+        logger.debug(f"Request: {request.Files}; Files: {files}, Request data: {request.data}")
         if not files:
             raise APIValidation(detail=_('File was not sent'), code=status.HTTP_400_BAD_REQUEST)
 
