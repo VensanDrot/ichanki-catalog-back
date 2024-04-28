@@ -21,6 +21,8 @@ class CategoryModelViewSet(ModelViewSetPack):
     serializer_class = GetCategorySerializer
     post_serializer_class = PostCategorySerializer
     permission_classes = (LandingPage,)
+    filter_backends = [DjangoFilterBackend, SearchFilter, ]
+    search_fields = ['name_en', 'name_uz', 'name_ru', ]
 
     @swagger_auto_schema(request_body=PostCategorySerializer)
     def update(self, request, *args, **kwargs):
