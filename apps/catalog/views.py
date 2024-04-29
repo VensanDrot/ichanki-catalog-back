@@ -4,6 +4,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
 from apps.catalog.filters import ProductFilter
 from apps.catalog.models import Category, Color, Size, Catalog, Specification
@@ -91,7 +92,14 @@ class CatalogModelViewSet(ModelViewSetPack):
 
     @swagger_auto_schema(request_body=PostCatalogSerializer)
     def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        new_instance = self.get_object()
+        response_serializer = RetrieveCatalogSerializer(instance=new_instance)
+        response = response_serializer.data
+        return Response(response)
 
     @swagger_auto_schema(request_body=PostCatalogSerializer)
     def partial_update(self, request, *args, **kwargs):

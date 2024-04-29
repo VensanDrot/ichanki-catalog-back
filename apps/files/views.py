@@ -85,30 +85,31 @@ class UploadFilesAPIView(APIView):
     parser_classes = [MultiPartParser, ]
 
     @staticmethod
-    @swagger_auto_schema(
-        operation_description="Upload files",
-        manual_parameters=[
-            openapi.Parameter(
-                'files', in_=openapi.IN_FORM,
-                type=openapi.TYPE_ARRAY,
-                items=openapi.Items(type=openapi.TYPE_FILE),
-                required=True,
-                description=_('The file to upload (max size 50 MB)')
-            )
-        ]
-    )
+    # @swagger_auto_schema(
+    #     operation_description="Upload files",
+    #     manual_parameters=[
+    #         openapi.Parameter(
+    #             'files', in_=openapi.IN_FORM,
+    #             type=openapi.TYPE_ARRAY,
+    #             items=openapi.Items(type=openapi.TYPE_FILE),
+    #             required=True,
+    #             description=_('The file to upload (max size 50 MB)')
+    #         )
+    #     ]
+    # )
     def post(request, *args, **kwargs):
-        files = request.FILES.getlist('files')
+        files = request.FILES
         logger.debug(f"Request: {request.FILES}; Files: {files}, Request data: {request.data}")
         if not files:
-            raise APIValidation(detail=_('File was not sent'), code=status.HTTP_400_BAD_REQUEST)
+            raise APIValidation(detail=_('File was not sent'), status_code=status.HTTP_400_BAD_REQUEST)
 
         response = []
         for file in files:
-            if file.size > 52_428_800:
-                raise APIValidation(detail=_('The file size has exceeded 50 mb!'), code=status.HTTP_400_BAD_REQUEST)
-            e_file = upload_file(file=file)
-            response.append(e_file.id)
+            if files[file].size > 52_428_800:
+                raise APIValidation(detail=_('The file size has exceeded 50 mb!'),
+                                    status_code=status.HTTP_400_BAD_REQUEST)
+            e_file = upload_file(file=files[file])
+            response.append({'key': file, 'id': e_file.id, 'name': e_file.name})
         return Response({
             "files": response,
             "status": status.HTTP_201_CREATED
