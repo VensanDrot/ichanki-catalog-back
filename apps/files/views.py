@@ -99,7 +99,7 @@ class UploadFilesAPIView(APIView):
     )
     def post(request, *args, **kwargs):
         files = request.FILES.getlist('files')
-        logger.debug(f"Request: {request.Files}; Files: {files}, Request data: {request.data}")
+        logger.debug(f"Request: {request.FILES}; Files: {files}, Request data: {request.data}")
         if not files:
             raise APIValidation(detail=_('File was not sent'), code=status.HTTP_400_BAD_REQUEST)
 
