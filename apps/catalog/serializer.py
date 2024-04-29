@@ -65,7 +65,7 @@ class PostSizeSerializer(serializers.ModelSerializer):
 
 class GetCatalogSerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
-    category = MultiLanguageCategorySerializer(allow_null=True)
+    category = serializers.CharField(source='category.name', read_only=True)
 
     class Meta:
         model = Catalog
@@ -172,7 +172,7 @@ class SearchProductSerializer(serializers.ModelSerializer):
 
 class RetrieveCatalogSerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
-    category = serializers.CharField(source='category.name', read_only=True)
+    category = MultiLanguageCategorySerializer(allow_null=True)
     specs = GetSpecificationSerializer(many=True, read_only=True)
 
     class Meta:
