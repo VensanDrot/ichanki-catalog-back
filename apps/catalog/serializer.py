@@ -83,14 +83,22 @@ class PostCatalogSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Catalog
-        fields = ['name_uz',
-                  'name_ru',
-                  'name_en',
-                  'description_uz',
-                  'description_ru',
-                  'description_en',
-                  'files',
-                  'category', ]
+        fields = [
+            'id',
+            'name_uz',
+            'name_ru',
+            'name_en',
+            'description_uz',
+            'description_ru',
+            'description_en',
+            'shape_uz',
+            'shape_ru',
+            'shape_en',
+            'material_uz',
+            'material_ru',
+            'material_en',
+            'files',
+            'category', ]
 
 
 class GetSpecificationSerializer(serializers.ModelSerializer):
@@ -178,11 +186,19 @@ class RetrieveCatalogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catalog
         fields = ['id',
-                  'name',
-                  'description',
+                  'name_uz',
+                  'name_ru',
+                  'name_en',
+                  'description_uz',
+                  'description_ru',
+                  'description_en',
                   'files',
-                  'shape',
-                  'material',
+                  'shape_uz',
+                  'shape_ru',
+                  'shape_en',
+                  'material_uz',
+                  'material_ru',
+                  'material_en',
                   'category',
                   'specs', ]
 
