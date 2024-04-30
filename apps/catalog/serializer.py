@@ -39,7 +39,8 @@ class GetColorSerializer(serializers.ModelSerializer):
 class PostColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
-        fields = ['name_uz',
+        fields = ['id',
+                  'name_uz',
                   'name_ru',
                   'name_en', ]
 
@@ -55,7 +56,8 @@ class GetSizeSerializer(serializers.ModelSerializer):
 class PostSizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Size
-        fields = ['list_uz',
+        fields = ['id',
+                  'list_uz',
                   'list_ru',
                   'list_en',
                   'roll_uz',
@@ -129,7 +131,8 @@ class PostSpecificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Specification
-        fields = ['is_active',
+        fields = ['id',
+                  'is_active',
                   'vendor_code',
                   'price',
                   'discount',

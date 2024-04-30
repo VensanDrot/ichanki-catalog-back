@@ -1,6 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.openapi import Parameter, TYPE_STRING, IN_QUERY
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
@@ -11,7 +12,7 @@ from apps.catalog.models import Category, Color, Size, Catalog, Specification
 from apps.catalog.serializer import GetCategorySerializer, GetColorSerializer, GetSizeSerializer, \
     PostCategorySerializer, PostSizeSerializer, PostColorSerializer, GetCatalogSerializer, PostCatalogSerializer, \
     PostSpecificationSerializer, GetSpecificationSerializer, SearchProductSerializer, RetrieveCatalogSerializer, \
-    MultiLanguageCatalogSerializer
+    MultiLanguageCatalogSerializer, MultiLanguageCategorySerializer
 from config.utils.pagination import APIPagination
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
@@ -25,9 +26,25 @@ class CategoryModelViewSet(ModelViewSetPack):
     filter_backends = [DjangoFilterBackend, SearchFilter, ]
     search_fields = ['name_en', 'name_uz', 'name_ru', ]
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            instance = self.perform_create(serializer)
+            response_serializer = MultiLanguageCategorySerializer(instance=instance)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     @swagger_auto_schema(request_body=PostCategorySerializer)
     def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        new_instance = self.get_object()
+        response_serializer = MultiLanguageCategorySerializer(instance=new_instance)
+        response = response_serializer.data
+        return Response(response)
 
     @swagger_auto_schema(request_body=PostCategorySerializer)
     def partial_update(self, request, *args, **kwargs):
@@ -45,9 +62,25 @@ class ColorModelViewSet(ModelViewSetPack):
     post_serializer_class = PostColorSerializer
     permission_classes = (LandingPage,)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            instance = self.perform_create(serializer)
+            response_serializer = PostColorSerializer(instance=instance)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     @swagger_auto_schema(request_body=PostColorSerializer)
     def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        new_instance = self.get_object()
+        response_serializer = PostColorSerializer(instance=new_instance)
+        response = response_serializer.data
+        return Response(response)
 
     @swagger_auto_schema(request_body=PostColorSerializer)
     def partial_update(self, request, *args, **kwargs):
@@ -65,9 +98,25 @@ class SizeModelViewSet(ModelViewSetPack):
     post_serializer_class = PostSizeSerializer
     permission_classes = (LandingPage,)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            instance = self.perform_create(serializer)
+            response_serializer = PostSizeSerializer(instance=instance)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     @swagger_auto_schema(request_body=PostSizeSerializer)
     def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        new_instance = self.get_object()
+        response_serializer = PostSizeSerializer(instance=new_instance)
+        response = response_serializer.data
+        return Response(response)
 
     @swagger_auto_schema(request_body=PostSizeSerializer)
     def partial_update(self, request, *args, **kwargs):
@@ -89,6 +138,15 @@ class CatalogModelViewSet(ModelViewSetPack):
         if self.action == 'retrieve':
             return RetrieveCatalogSerializer(args[0])
         return super().get_serializer(*args, **kwargs)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            instance = self.perform_create(serializer)
+            response_serializer = RetrieveCatalogSerializer(instance=instance)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(request_body=PostCatalogSerializer)
     def update(self, request, *args, **kwargs):
@@ -116,6 +174,15 @@ class SpecificationModelViewSet(ModelViewSetPack):
     serializer_class = GetSpecificationSerializer
     post_serializer_class = PostSpecificationSerializer
     permission_classes = (LandingPage,)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            instance = self.perform_create(serializer)
+            response_serializer = PostSpecificationSerializer(instance=instance)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @swagger_auto_schema(request_body=PostSpecificationSerializer)
     def update(self, request, *args, **kwargs):

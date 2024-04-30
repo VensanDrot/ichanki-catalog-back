@@ -25,6 +25,7 @@ class ModelViewSetPack(ModelViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
         update_log(self.request, instance)
+        return instance
 
     def perform_update(self, serializer):
         instance = serializer.save()
