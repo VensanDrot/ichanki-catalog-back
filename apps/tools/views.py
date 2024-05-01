@@ -71,7 +71,7 @@ class GlobalSearchAPIView(APIView):
         article_serializer = GetColorSerializer(article_results, many=True)
 
         store_results = Store.objects.filter(
-            Q(title_uz__icontains=search) | Q(title_ru__icontains=search) | Q(title_en__icontains=search) |
+            Q(name_uz__icontains=search) | Q(name_ru__icontains=search) | Q(name_en__icontains=search) |
             Q(address_uz__icontains=search) | Q(address_ru__icontains=search) | Q(address_en__icontains=search)
         )
         store_serializer = SearchStoreSerializer(store_results, many=True)
