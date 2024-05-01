@@ -4,10 +4,13 @@ from django.utils import timezone
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.utils.translation import gettext_lazy as _
-from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework import status
+from rest_framework.generics import CreateAPIView, ListAPIView, get_object_or_404
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from apps.shopping.filters import ApplicationFilter
-from apps.shopping.models import Store, Application
+from apps.shopping.models import Store, Application, ACCEPTED
 from apps.shopping.serializer import GetStoreSerializer, PostStoreSerializer, GiveApplicationSerializer, \
     ApplicationListSerializer
 from config.utils.pagination import APIPagination
@@ -80,3 +83,15 @@ class ApplicationListAPIView(ListAPIView):
             queryset = queryset.filter(created_at__lte=to_date)
 
         return queryset
+
+
+class AcceptApplicationAPIView(APIView):
+    def post(self, request, *args, **kwargs):
+        application_id = kwargs['application_id']
+        instance = get_object_or_404(Application, pk=application_id)
+        instance.status = ACCEPTED
+        instance.save()
+        return Response({
+            'detail': 'Application accepted',
+            'id': application_id
+        }, status=status.HTTP_200_OK)
