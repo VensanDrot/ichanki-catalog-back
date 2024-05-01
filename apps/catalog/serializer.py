@@ -80,29 +80,6 @@ class GetCatalogSerializer(serializers.ModelSerializer):
                   'category', ]
 
 
-class PostCatalogSerializer(serializers.ModelSerializer):
-    files = serializers.SlugRelatedField(slug_field='id', many=True, queryset=File.objects.all())
-
-    class Meta:
-        model = Catalog
-        fields = [
-            'id',
-            'name_uz',
-            'name_ru',
-            'name_en',
-            'description_uz',
-            'description_ru',
-            'description_en',
-            'shape_uz',
-            'shape_ru',
-            'shape_en',
-            'material_uz',
-            'material_ru',
-            'material_en',
-            'files',
-            'category', ]
-
-
 class GetSpecificationSerializer(serializers.ModelSerializer):
     miniature = serializers.CharField(source='miniature.path', allow_null=True)
     catalog = serializers.CharField(source='catalog.name')
@@ -138,6 +115,22 @@ class PostSpecificationSerializer(serializers.ModelSerializer):
                   'discount',
                   'miniature',
                   'catalog',
+                  'size',
+                  'color',
+                  'files', ]
+
+
+class InsideCatalogSpecificationSerializer(serializers.ModelSerializer):
+    files = serializers.SlugRelatedField(slug_field='id', many=True, queryset=File.objects.all())
+
+    class Meta:
+        model = Specification
+        fields = ['id',
+                  'is_active',
+                  'vendor_code',
+                  'price',
+                  'discount',
+                  'miniature',
                   'size',
                   'color',
                   'files', ]
@@ -179,6 +172,41 @@ class SearchProductSerializer(serializers.ModelSerializer):
                   'files',
                   'category',
                   'specs', ]
+
+
+class PostCatalogSerializer(serializers.ModelSerializer):
+    files = serializers.SlugRelatedField(slug_field='id', many=True, queryset=File.objects.all())
+    specs = InsideCatalogSpecificationSerializer(many=True)
+
+    def create(self, validated_data):
+        specs = validated_data.pop('specs')
+        instance = super().create(validated_data)
+        for spec in specs:
+            spec_files = spec.pop('files', [])
+            specification = Specification.objects.create(catalog_id=instance.id, **spec)
+            specification.files.add(*spec_files)
+            instance.specs.add(specification)
+        return instance
+
+    class Meta:
+        model = Catalog
+        fields = [
+            'id',
+            'name_uz',
+            'name_ru',
+            'name_en',
+            'description_uz',
+            'description_ru',
+            'description_en',
+            'shape_uz',
+            'shape_ru',
+            'shape_en',
+            'material_uz',
+            'material_ru',
+            'material_en',
+            'files',
+            'specs',
+            'category', ]
 
 
 class RetrieveCatalogSerializer(serializers.ModelSerializer):

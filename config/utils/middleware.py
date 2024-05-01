@@ -1,6 +1,5 @@
 import uuid
 
-
 from apps.tools.models import ActionLog
 from apps.tools.utils.logs import create_log
 
@@ -11,9 +10,11 @@ class ActionLoggingMiddleware:
 
     def __call__(self, request):
         request.uuid = uuid.uuid4()
-        ActionLog.objects.create(uuid=request.uuid)
+        log = ActionLog.objects.create(uuid=request.uuid)
         response = self.get_response(request)
-        self.log_action(request)
+        is_logged = self.log_action(request)
+        if not is_logged:
+            log.delete()
         return response
 
     def log_action(self, request):
@@ -23,6 +24,7 @@ class ActionLoggingMiddleware:
                 section = request.resolver_match.app_name.capitalize()
                 action = self.get_action(request)
                 create_log(request, action, user.username, section)
+                return True
 
     @staticmethod
     def get_action(request):
