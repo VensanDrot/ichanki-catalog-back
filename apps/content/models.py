@@ -16,10 +16,12 @@ class News(BaseModel):
 
 
 class Article(BaseModel):
-    is_draft = models.BooleanField('is draft', default=False)
-    title = models.CharField('title', max_length=155)
-    description = models.TextField('description', null=True, blank=True)
-    content = models.TextField('content', null=True, blank=True)
+    name = models.CharField('name', max_length=255)
+
+    # is_draft = models.BooleanField('is draft', default=False)
+    # title = models.CharField('title', max_length=155)
+    # description = models.TextField('description', null=True, blank=True)
+    # content = models.TextField('content', null=True, blank=True)
 
     # photos ForeignKey inside File model
 

@@ -18,7 +18,7 @@ class File(BaseModel):
     specification = models.ForeignKey(Specification, on_delete=models.SET_NULL, null=True, blank=True,
                                       related_name='files')
     news = models.ForeignKey(News, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
-    article = models.ForeignKey(Article, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
+    # article = models.ForeignKey(Article, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
     store = models.ForeignKey(Store, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
 
     class Meta:

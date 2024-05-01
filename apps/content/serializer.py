@@ -10,7 +10,8 @@ class GetNewsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = News
-        fields = ['is_draft',
+        fields = ['id',
+                  'is_draft',
                   'title',
                   'description',
                   'content',
@@ -22,7 +23,27 @@ class PostNewsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = News
-        fields = ['is_draft',
+        fields = ['id',
+                  'is_draft',
+                  'title_uz',
+                  'title_en',
+                  'title_ru',
+                  'description_uz',
+                  'description_en',
+                  'description_ru',
+                  'content_uz',
+                  'content_en',
+                  'content_ru',
+                  'files', ]
+
+
+class RetrieveNewsSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+
+    class Meta:
+        model = News
+        fields = ['id',
+                  'is_draft',
                   'title_uz',
                   'title_en',
                   'title_ru',
@@ -36,30 +57,16 @@ class PostNewsSerializer(serializers.ModelSerializer):
 
 
 class GetArticleSerializer(serializers.ModelSerializer):
-    files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
-
     class Meta:
         model = Article
-        fields = ['is_draft',
-                  'title',
-                  'description',
-                  'content',
-                  'files', ]
+        fields = ['id',
+                  'name', ]
 
 
 class PostArticleSerializer(serializers.ModelSerializer):
-    files = serializers.SlugRelatedField(slug_field='id', many=True, queryset=File.objects.all())
-
     class Meta:
         model = Article
-        fields = ['is_draft',
-                  'title_uz',
-                  'title_en',
-                  'title_ru',
-                  'description_uz',
-                  'description_en',
-                  'description_ru',
-                  'content_uz',
-                  'content_en',
-                  'content_ru',
-                  'files', ]
+        fields = ['id',
+                  'name_uz',
+                  'name_ru',
+                  'name_en', ]

@@ -7,5 +7,9 @@ class NewsTranslationOptions(TranslationOptions):
     fields = ('title', 'description', 'content',)
 
 
+class ArticleTranslationOptions(TranslationOptions):
+    fields = ('name',)
+
+
 translator.register(News, NewsTranslationOptions)
-translator.register(Article, NewsTranslationOptions)
+translator.register(Article, ArticleTranslationOptions)

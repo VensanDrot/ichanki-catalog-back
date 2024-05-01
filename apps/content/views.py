@@ -1,7 +1,9 @@
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework.generics import RetrieveAPIView
 
 from apps.content.models import News, Article
-from apps.content.serializer import GetNewsSerializer, PostNewsSerializer, GetArticleSerializer, PostArticleSerializer
+from apps.content.serializer import GetNewsSerializer, PostNewsSerializer, GetArticleSerializer, PostArticleSerializer, \
+    RetrieveNewsSerializer
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
 
@@ -21,6 +23,11 @@ class NewsModelViewSet(ModelViewSetPack):
         return super().partial_update(request, *args, **kwargs)
 
 
+class NewsRetrieveAPIView(RetrieveAPIView):
+    queryset = News.objects.all()
+    serializer_class = RetrieveNewsSerializer
+
+
 class ArticleModelViewSet(ModelViewSetPack):
     queryset = Article.objects.all()
     serializer_class = GetArticleSerializer
@@ -34,3 +41,8 @@ class ArticleModelViewSet(ModelViewSetPack):
     @swagger_auto_schema(request_body=PostArticleSerializer)
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
+
+
+class ArticleRetrieveAPIView(RetrieveAPIView):
+    queryset = Article.objects.all()
+    serializer_class = PostArticleSerializer
