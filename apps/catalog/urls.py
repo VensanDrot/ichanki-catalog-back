@@ -19,6 +19,5 @@ urlpatterns = [
     path('color/<int:pk>/all/', ColorRetrieveAPIView.as_view(), name='color_retrieve_all'),
     path('size/<int:pk>/all/', SizeRetrieveAPIView.as_view(), name='size_retrieve_all'),
     path('product/<int:pk>/all/', CatalogRetrieveAPIView.as_view(), name='product_retrieve_all'),
-    path('specification/<int:pk>/all/', SpecificationRetrieveAPIView.as_view(), name='product_retrieve_all'),
 ]
 urlpatterns += router.urls
