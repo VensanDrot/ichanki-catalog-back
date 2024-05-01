@@ -10,7 +10,8 @@ class GetStoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Store
-        fields = ['name',
+        fields = ['id',
+                  'name',
                   'description',
                   'address',
                   'phone_number',
@@ -25,7 +26,8 @@ class PostStoreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Store
-        fields = ['name_uz',
+        fields = ['id',
+                  'name_uz',
                   'name_en',
                   'name_ru',
                   'description_uz',
@@ -61,7 +63,8 @@ class GiveApplicationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Application
-        fields = ['fullname',
+        fields = ['id',
+                  'fullname',
                   'phone_number',
                   'delivery_pickup',
                   'region',

@@ -42,7 +42,8 @@ class PostUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username',
+        fields = ['id',
+                  'username',
                   'fullname',
                   'password',
                   'is_superuser']
