@@ -21,6 +21,14 @@ class GetStoreSerializer(serializers.ModelSerializer):
                   'files', ]
 
 
+class SearchStoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Store
+        fields = ['id',
+                  'name',
+                  'address', ]
+
+
 class PostStoreSerializer(serializers.ModelSerializer):
     files = serializers.SlugRelatedField(slug_field='id', many=True, queryset=File.objects.all())
 
