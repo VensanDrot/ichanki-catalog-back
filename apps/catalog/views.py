@@ -6,9 +6,10 @@ from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from apps.catalog.filters import ProductFilter
-from apps.catalog.models import Category, Color, Size, Catalog, Specification
+from apps.catalog.models import Category, Color, Size, Catalog, Specification, SIZE_CHOICES
 from apps.catalog.serializer import GetCategorySerializer, GetColorSerializer, GetSizeSerializer, \
     PostCategorySerializer, PostSizeSerializer, PostColorSerializer, GetCatalogSerializer, PostCatalogSerializer, \
     PostSpecificationSerializer, GetSpecificationSerializer, SearchProductSerializer, RetrieveCatalogSerializer, \
@@ -98,6 +99,19 @@ class SizeModelViewSet(ModelViewSetPack):
     post_serializer_class = PostSizeSerializer
     permission_classes = (LandingPage,)
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        size_type = self.request.query_params.get('size_type', None)
+        if size_type:
+            queryset = queryset.filter(size_type=size_type)
+        return queryset
+
+    @swagger_auto_schema(manual_parameters=[
+        Parameter('size_type', IN_QUERY, description="Size type, ROLL or LIST", type=TYPE_STRING),
+    ])
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -126,6 +140,18 @@ class SizeModelViewSet(ModelViewSetPack):
 class SizeRetrieveAPIView(RetrieveAPIView):
     queryset = Size.objects.all()
     serializer_class = PostSizeSerializer
+
+
+class SizeTypeSelectAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        size_types = SIZE_CHOICES
+        response = []
+        for size in size_types:
+            response.append({
+                'value': size[0],
+                'label': size[1],
+            })
+        return Response(response)
 
 
 class CatalogModelViewSet(ModelViewSetPack):

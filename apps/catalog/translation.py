@@ -7,8 +7,8 @@ class NameTranslationOptions(TranslationOptions):
     fields = ('name',)
 
 
-class SizeTranslationOptions(TranslationOptions):
-    fields = ('list', 'roll',)
+# class SizeTranslationOptions(TranslationOptions):
+#     fields = ('list', 'roll',)
 
 
 class CatalogTranslationOptions(TranslationOptions):
@@ -17,7 +17,6 @@ class CatalogTranslationOptions(TranslationOptions):
 
 translator.register(Category, NameTranslationOptions)
 translator.register(Color, NameTranslationOptions)
-
-translator.register(Size, SizeTranslationOptions)
+translator.register(Size, NameTranslationOptions)
 
 translator.register(Catalog, CatalogTranslationOptions)

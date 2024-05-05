@@ -46,23 +46,24 @@ class PostColorSerializer(serializers.ModelSerializer):
 
 
 class GetSizeSerializer(serializers.ModelSerializer):
+    size_type_display = serializers.CharField(source='get_size_type_display', read_only=True)
+
     class Meta:
         model = Size
         fields = ['id',
-                  'list',
-                  'roll', ]
+                  'name',
+                  'size_type',
+                  'size_type_display', ]
 
 
 class PostSizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Size
         fields = ['id',
-                  'list_uz',
-                  'list_ru',
-                  'list_en',
-                  'roll_uz',
-                  'roll_ru',
-                  'roll_en', ]
+                  'name_uz',
+                  'name_ru',
+                  'name_en',
+                  'size_type', ]
 
 
 class GetCatalogSerializer(serializers.ModelSerializer):
@@ -83,8 +84,7 @@ class GetCatalogSerializer(serializers.ModelSerializer):
 class GetSpecificationSerializer(serializers.ModelSerializer):
     miniature = serializers.CharField(source='miniature.path', allow_null=True)
     catalog = serializers.CharField(source='catalog.name')
-    roll = serializers.CharField(source='size.roll')
-    list = serializers.CharField(source='size.list')
+    size = GetSizeSerializer(many=True, allow_null=True)
     color = serializers.CharField(source='color.name')
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
 
@@ -97,14 +97,14 @@ class GetSpecificationSerializer(serializers.ModelSerializer):
                   'discount',
                   'miniature',
                   'catalog',
-                  'roll',
-                  'list',
+                  'size',
                   'color',
                   'files', ]
 
 
 class PostSpecificationSerializer(serializers.ModelSerializer):
     files = serializers.SlugRelatedField(slug_field='id', many=True, queryset=File.objects.all())
+    size = serializers.SlugRelatedField(slug_field='id', many=True, queryset=Size.objects.all())
 
     class Meta:
         model = Specification
@@ -122,6 +122,7 @@ class PostSpecificationSerializer(serializers.ModelSerializer):
 
 class InsideCatalogSpecificationSerializer(serializers.ModelSerializer):
     files = serializers.SlugRelatedField(slug_field='id', many=True, queryset=File.objects.all())
+    size = serializers.SlugRelatedField(slug_field='id', many=True, queryset=Size.objects.all())
 
     class Meta:
         model = Specification
@@ -139,16 +140,14 @@ class InsideCatalogSpecificationSerializer(serializers.ModelSerializer):
 class ProductSpecificationSerializer(serializers.ModelSerializer):
     miniature = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
     color = serializers.CharField(source='color.name')
-    size_list = serializers.CharField(source='size.list')
-    size_roll = serializers.CharField(source='size.roll')
+    size = GetSizeSerializer(many=True, allow_null=True)
 
     class Meta:
         model = Specification
         fields = ['price',
                   'discount',
                   'color',
-                  'size_list',
-                  'size_roll',
+                  'size',
                   'vendor_code',
                   'miniature', ]
 
@@ -183,8 +182,10 @@ class PostCatalogSerializer(serializers.ModelSerializer):
         instance = super().create(validated_data)
         for spec in specs:
             spec_files = spec.pop('files', [])
+            spec_sizes = spec.pop('size', [])
             specification = Specification.objects.create(catalog_id=instance.id, **spec)
             specification.files.add(*spec_files)
+            specification.size.add(*spec_sizes)
             instance.specs.add(specification)
         return instance
 
