@@ -1,9 +1,9 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import RetrieveAPIView
 
-from apps.content.models import News, Article
+from apps.content.models import News, Article, Banner
 from apps.content.serializer import GetNewsSerializer, PostNewsSerializer, GetArticleSerializer, PostArticleSerializer, \
-    RetrieveNewsSerializer
+    RetrieveNewsSerializer, GetBannerSerializer, PostBannerSerializer, RetrieveBannerSerializer
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
 
@@ -46,3 +46,23 @@ class ArticleModelViewSet(ModelViewSetPack):
 class ArticleRetrieveAPIView(RetrieveAPIView):
     queryset = Article.objects.all()
     serializer_class = PostArticleSerializer
+
+
+class BannerModelViewSet(ModelViewSetPack):
+    queryset = Banner.objects.all()
+    serializer_class = GetBannerSerializer
+    post_serializer_class = PostBannerSerializer
+    permission_classes = (LandingPage,)
+
+    @swagger_auto_schema(request_body=PostBannerSerializer)
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(request_body=PostBannerSerializer)
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+
+class BannerRetrieveAPIView(RetrieveAPIView):
+    queryset = Banner.objects.all()
+    serializer_class = RetrieveBannerSerializer

@@ -1,7 +1,7 @@
 from django.db import models
 
 from apps.catalog.models import Specification, Catalog
-from apps.content.models import News, Article
+from apps.content.models import News
 from apps.shopping.models import Store
 from config.models import BaseModel
 
@@ -18,7 +18,6 @@ class File(BaseModel):
     specification = models.ForeignKey(Specification, on_delete=models.SET_NULL, null=True, blank=True,
                                       related_name='files')
     news = models.ForeignKey(News, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
-    # article = models.ForeignKey(Article, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
     store = models.ForeignKey(Store, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
 
     class Meta:

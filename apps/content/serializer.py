@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.content.models import News, Article
+from apps.content.models import News, Article, Banner
 from apps.files.models import File
 from apps.files.serializer import FileSerializer
 
@@ -70,3 +70,52 @@ class PostArticleSerializer(serializers.ModelSerializer):
                   'name_uz',
                   'name_ru',
                   'name_en', ]
+
+
+class GetBannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Banner
+        fields = ['id',
+                  'name',
+                  'description', ]
+
+
+class PostBannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Banner
+        fields = [
+            'id',
+            'name_uz',
+            'name_ru',
+            'name_en',
+            'description_uz',
+            'description_ru',
+            'description_en',
+            'button_uz',
+            'button_ru',
+            'button_en',
+            'button_link',
+            'background_picture',
+            'focus_picture',
+        ]
+
+
+class RetrieveBannerSerializer(serializers.ModelSerializer):
+    background_picture = FileSerializer(allow_null=True)
+    focus_picture = FileSerializer(allow_null=True)
+
+    class Meta:
+        model = Banner
+        fields = ['id',
+                  'name_uz',
+                  'name_ru',
+                  'name_en',
+                  'description_uz',
+                  'description_ru',
+                  'description_en',
+                  'button_uz',
+                  'button_ru',
+                  'button_en',
+                  'button_link',
+                  'background_picture',
+                  'focus_picture', ]
