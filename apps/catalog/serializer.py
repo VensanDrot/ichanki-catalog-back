@@ -181,6 +181,8 @@ class PostCatalogSerializer(serializers.ModelSerializer):
         specs = validated_data.pop('specs')
         instance = super().create(validated_data)
         for spec in specs:
+            if not spec.get('miniature'):
+                spec.pop('miniature', '')
             spec_files = spec.pop('files', [])
             spec_sizes = spec.pop('size', [])
             specification = Specification.objects.create(catalog_id=instance.id, **spec)
