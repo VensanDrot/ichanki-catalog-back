@@ -178,8 +178,23 @@ class PostCatalogSerializer(serializers.ModelSerializer):
     specs = InsideCatalogSpecificationSerializer(many=True)
 
     def create(self, validated_data):
-        specs = validated_data.pop('specs')
+        specs = validated_data.pop('specs', [])
         instance = super().create(validated_data)
+        for spec in specs:
+            if not spec.get('miniature'):
+                spec.pop('miniature', '')
+            spec_files = spec.pop('files', [])
+            spec_sizes = spec.pop('size', [])
+            specification = Specification.objects.create(catalog_id=instance.id, **spec)
+            specification.files.add(*spec_files)
+            specification.size.add(*spec_sizes)
+            instance.specs.add(specification)
+        return instance
+
+    def update(self, instance, validated_data):
+        specs = validated_data.pop('specs', [])
+        instance: Catalog = super().update(instance, validated_data)
+        instance.specs.all().delete()
         for spec in specs:
             if not spec.get('miniature'):
                 spec.pop('miniature', '')
