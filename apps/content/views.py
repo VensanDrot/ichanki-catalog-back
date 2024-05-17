@@ -1,5 +1,6 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.generics import RetrieveAPIView, ListAPIView
+from rest_framework.permissions import AllowAny
 
 from apps.content.models import News, Article, Banner
 from apps.content.serializer import GetNewsSerializer, PostNewsSerializer, GetArticleSerializer, PostArticleSerializer, \
@@ -72,3 +73,4 @@ class BannerRetrieveAPIView(RetrieveAPIView):
 class BannerMainPageAPIView(ListAPIView):
     queryset = Banner.objects.all()
     serializer_class = BannerMainPageSerializer
+    permission_classes = [AllowAny, ]
