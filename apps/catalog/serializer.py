@@ -60,9 +60,7 @@ class PostSizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Size
         fields = ['id',
-                  'name_uz',
-                  'name_ru',
-                  'name_en',
+                  'name',
                   'size_type', ]
 
 

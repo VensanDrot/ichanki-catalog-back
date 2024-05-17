@@ -1,9 +1,10 @@
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.generics import RetrieveAPIView
+from rest_framework.generics import RetrieveAPIView, ListAPIView
 
 from apps.content.models import News, Article, Banner
 from apps.content.serializer import GetNewsSerializer, PostNewsSerializer, GetArticleSerializer, PostArticleSerializer, \
-    RetrieveNewsSerializer, GetBannerSerializer, PostBannerSerializer, RetrieveBannerSerializer
+    RetrieveNewsSerializer, GetBannerSerializer, PostBannerSerializer, RetrieveBannerSerializer, \
+    BannerMainPageSerializer
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
 
@@ -66,3 +67,8 @@ class BannerModelViewSet(ModelViewSetPack):
 class BannerRetrieveAPIView(RetrieveAPIView):
     queryset = Banner.objects.all()
     serializer_class = RetrieveBannerSerializer
+
+
+class BannerMainPageAPIView(ListAPIView):
+    queryset = Banner.objects.all()
+    serializer_class = BannerMainPageSerializer

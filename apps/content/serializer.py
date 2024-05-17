@@ -119,3 +119,15 @@ class RetrieveBannerSerializer(serializers.ModelSerializer):
                   'button_link',
                   'background_picture',
                   'focus_picture', ]
+
+
+class BannerMainPageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Banner
+        fields = ['id',
+                  'name',
+                  'description',
+                  'button',
+                  'button_link',
+                  'background_picture',
+                  'focus_picture', ]

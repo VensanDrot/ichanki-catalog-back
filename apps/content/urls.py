@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from apps.content.views import NewsModelViewSet, ArticleModelViewSet, ArticleRetrieveAPIView, NewsRetrieveAPIView, \
-    BannerModelViewSet, BannerRetrieveAPIView
+    BannerModelViewSet, BannerRetrieveAPIView, BannerMainPageAPIView
 
 router = DefaultRouter()
 router.register(r'news', NewsModelViewSet, basename='news')
@@ -14,5 +14,6 @@ urlpatterns = [
     path('article/<int:pk>/all/', ArticleRetrieveAPIView.as_view(), name='article_retrieve_all'),
     path('news/<int:pk>/all/', NewsRetrieveAPIView.as_view(), name='news_retrieve_all'),
     path('banner/<int:pk>/all/', BannerRetrieveAPIView.as_view(), name='banner_retrieve_all'),
+    path('banner/main-page/', BannerMainPageAPIView.as_view(), name='banner_main_page'),
 ]
 urlpatterns += router.urls

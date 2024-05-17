@@ -17,6 +17,6 @@ class CatalogTranslationOptions(TranslationOptions):
 
 translator.register(Category, NameTranslationOptions)
 translator.register(Color, NameTranslationOptions)
-translator.register(Size, NameTranslationOptions)
+# translator.register(Size, NameTranslationOptions)
 
 translator.register(Catalog, CatalogTranslationOptions)
