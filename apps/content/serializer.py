@@ -122,6 +122,9 @@ class RetrieveBannerSerializer(serializers.ModelSerializer):
 
 
 class BannerMainPageSerializer(serializers.ModelSerializer):
+    background_picture = FileSerializer(allow_null=True)
+    focus_picture = FileSerializer(allow_null=True)
+
     class Meta:
         model = Banner
         fields = ['id',
