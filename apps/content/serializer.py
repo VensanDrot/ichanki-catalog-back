@@ -11,7 +11,6 @@ class GetNewsSerializer(serializers.ModelSerializer):
     class Meta:
         model = News
         fields = ['id',
-                  'is_draft',
                   'title',
                   'description',
                   'content',
@@ -54,6 +53,14 @@ class RetrieveNewsSerializer(serializers.ModelSerializer):
                   'content_en',
                   'content_ru',
                   'files', ]
+
+
+class NewsMainPageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = News
+        fields = ['id',
+                  'title',
+                  'description', ]
 
 
 class GetArticleSerializer(serializers.ModelSerializer):

@@ -3,7 +3,7 @@ from drf_yasg.openapi import Parameter, TYPE_STRING, IN_QUERY
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.filters import SearchFilter
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -13,7 +13,8 @@ from apps.catalog.models import Category, Color, Size, Catalog, Specification, S
 from apps.catalog.serializer import GetCategorySerializer, GetColorSerializer, GetSizeSerializer, \
     PostCategorySerializer, PostSizeSerializer, PostColorSerializer, GetCatalogSerializer, PostCatalogSerializer, \
     PostSpecificationSerializer, GetSpecificationSerializer, SearchProductSerializer, RetrieveCatalogSerializer, \
-    MultiLanguageCatalogSerializer, MultiLanguageCategorySerializer
+    MultiLanguageCatalogSerializer, MultiLanguageCategorySerializer, RetrievePageCatalogSerializer, \
+    LandingProductSerializer
 from config.utils.pagination import APIPagination
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
@@ -162,7 +163,7 @@ class CatalogModelViewSet(ModelViewSetPack):
 
     def get_serializer(self, *args, **kwargs):
         if self.action == 'retrieve':
-            return RetrieveCatalogSerializer(args[0])
+            return RetrievePageCatalogSerializer(args[0])
         return super().get_serializer(*args, **kwargs)
 
     def create(self, request, *args, **kwargs):
@@ -220,7 +221,7 @@ class SpecificationModelViewSet(ModelViewSetPack):
 
 
 class SearchProductsAPIView(ListAPIView):
-    queryset = Catalog.objects.distinct('id')
+    queryset = Catalog.objects.select_related('category').prefetch_related('specs')
     serializer_class = SearchProductSerializer
     filterset_class = ProductFilter
     pagination_class = APIPagination
@@ -237,3 +238,22 @@ class SearchProductsAPIView(ListAPIView):
     ])
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+
+class LandingProductsAPIView(ListAPIView):
+    queryset = Catalog.objects.select_related('category').prefetch_related('specs').order_by('-id')[:4]
+    serializer_class = LandingProductSerializer
+    permission_classes = [AllowAny, ]
+
+
+class SameProductsAPIView(ListAPIView):
+    queryset = Catalog.objects.select_related('category').prefetch_related('specs')
+    serializer_class = LandingProductSerializer
+    permission_classes = [AllowAny, ]
+
+    def get_queryset(self):
+        product_id = self.kwargs['product_id']
+        product = get_object_or_404(Catalog, pk=product_id)
+        queryset = super().get_queryset()
+        queryset = queryset.filter(category_id=product.category_id).exclude(pk=product_id).order_by('-id')[:4]
+        return queryset

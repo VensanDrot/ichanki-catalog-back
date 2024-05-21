@@ -6,6 +6,7 @@ from drf_yasg.utils import swagger_auto_schema
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView, get_object_or_404
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -37,6 +38,7 @@ class StoreModelViewSet(ModelViewSetPack):
 class GiveApplicationAPIView(CreateAPIView):
     queryset = Application.objects.all()
     serializer_class = GiveApplicationSerializer
+    permission_classes = [AllowAny, ]
 
 
 class ApplicationListAPIView(ListAPIView):

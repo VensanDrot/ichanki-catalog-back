@@ -136,7 +136,7 @@ class InsideCatalogSpecificationSerializer(serializers.ModelSerializer):
 
 
 class ProductSpecificationSerializer(serializers.ModelSerializer):
-    miniature = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+    miniature = FileSerializer(read_only=True, required=False, allow_null=True)
     color = serializers.CharField(source='color.name')
     size = GetSizeSerializer(many=True, allow_null=True)
 
@@ -146,6 +146,18 @@ class ProductSpecificationSerializer(serializers.ModelSerializer):
                   'discount',
                   'color',
                   'size',
+                  'vendor_code',
+                  'miniature', ]
+
+
+class LandingSpecificationSerializer(serializers.ModelSerializer):
+    miniature = FileSerializer(read_only=True, required=False, allow_null=True)
+    color = serializers.CharField(source='color.name')
+
+    class Meta:
+        model = Specification
+        fields = ['discount',
+                  'color',
                   'vendor_code',
                   'miniature', ]
 
@@ -168,6 +180,24 @@ class SearchProductSerializer(serializers.ModelSerializer):
                   'description',
                   'files',
                   'category',
+                  'specs', ]
+
+
+class LandingProductSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+    specs = LandingSpecificationSerializer(many=True, allow_null=True)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        active_specs = instance.specs.filter(is_active=True)
+        representation['specs'] = LandingSpecificationSerializer(active_specs, many=True).data
+        return representation
+
+    class Meta:
+        model = Catalog
+        fields = ['id',
+                  'name',
+                  'files',
                   'specs', ]
 
 
@@ -246,6 +276,23 @@ class RetrieveCatalogSerializer(serializers.ModelSerializer):
                   'material_uz',
                   'material_ru',
                   'material_en',
+                  'category',
+                  'specs', ]
+
+
+class RetrievePageCatalogSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+    category = GetCategorySerializer(allow_null=True)
+    specs = GetSpecificationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Catalog
+        fields = ['id',
+                  'name',
+                  'description',
+                  'files',
+                  'shape',
+                  'material',
                   'category',
                   'specs', ]
 

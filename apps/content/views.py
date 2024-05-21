@@ -5,7 +5,8 @@ from rest_framework.permissions import AllowAny
 from apps.content.models import News, Article, Banner
 from apps.content.serializer import GetNewsSerializer, PostNewsSerializer, GetArticleSerializer, PostArticleSerializer, \
     RetrieveNewsSerializer, GetBannerSerializer, PostBannerSerializer, RetrieveBannerSerializer, \
-    BannerMainPageSerializer
+    BannerMainPageSerializer, NewsMainPageSerializer
+from config.utils.pagination import APIPagination
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
 
@@ -28,6 +29,25 @@ class NewsModelViewSet(ModelViewSetPack):
 class NewsRetrieveAPIView(RetrieveAPIView):
     queryset = News.objects.all()
     serializer_class = RetrieveNewsSerializer
+
+
+class NewsLandingListAPIView(ListAPIView):
+    queryset = News.objects.filter(is_draft=False).order_by('-id')[:3]
+    serializer_class = NewsMainPageSerializer
+    permission_classes = [AllowAny, ]
+
+
+class NewsPageListAPIView(ListAPIView):
+    queryset = News.objects.filter(is_draft=False).order_by('-id')
+    serializer_class = NewsMainPageSerializer
+    permission_classes = [AllowAny, ]
+    pagination_class = APIPagination
+
+
+class NewsLandingRetrieveAPIView(RetrieveAPIView):
+    queryset = News.objects.filter(is_draft=False)
+    serializer_class = GetNewsSerializer
+    permission_classes = [AllowAny, ]
 
 
 class ArticleModelViewSet(ModelViewSetPack):
