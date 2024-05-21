@@ -47,6 +47,7 @@ class Catalog(BaseModel):
     description = models.TextField('description', null=True, blank=True)
     material = models.CharField('material', max_length=100, null=True, blank=True)
     shape = models.CharField('shape', max_length=55, null=True, blank=True)
+    visits = models.PositiveIntegerField(null=True, blank=True, default=0)
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='category', related_name='catalogs')
 

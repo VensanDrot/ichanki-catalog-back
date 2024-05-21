@@ -1,5 +1,5 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_yasg.openapi import Parameter, TYPE_STRING, IN_QUERY
+from drf_yasg.openapi import Parameter, TYPE_STRING, IN_QUERY, IN_PATH
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.filters import SearchFilter
@@ -163,6 +163,11 @@ class CatalogModelViewSet(ModelViewSetPack):
 
     def get_serializer(self, *args, **kwargs):
         if self.action == 'retrieve':
+            if not self.request.user.is_authenticated:
+                if args:
+                    instance = args[0]
+                    instance.visits += 1
+                    instance.save()
             return RetrievePageCatalogSerializer(args[0])
         return super().get_serializer(*args, **kwargs)
 
@@ -241,9 +246,23 @@ class SearchProductsAPIView(ListAPIView):
 
 
 class LandingProductsAPIView(ListAPIView):
-    queryset = Catalog.objects.select_related('category').prefetch_related('specs').order_by('-id')[:4]
+    queryset = Catalog.objects.select_related('category').prefetch_related('specs')
     serializer_class = LandingProductSerializer
     permission_classes = [AllowAny, ]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        if self.request.query_params.get('order_type') == 'POPULAR':
+            queryset = queryset.order_by('-visits')[:4]
+        else:
+            queryset = queryset.order_by('-id')[:4]
+        return queryset
+
+    @swagger_auto_schema(manual_parameters=[
+        Parameter('order_type', IN_QUERY, description="Order type choices: POPULAR, LATEST", type=TYPE_STRING),
+    ])
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class SameProductsAPIView(ListAPIView):
