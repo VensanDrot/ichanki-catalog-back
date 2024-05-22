@@ -22,7 +22,7 @@ class ActionLogListAPIView(ListAPIView):
     pagination_class = APIPagination
 
 
-class GlobalSearchAPIView(APIView):
+class AdminSiteGlobalSearchAPIView(APIView):
     @swagger_auto_schema(manual_parameters=[
         Parameter('search', IN_QUERY, description="Search", type=TYPE_STRING),
     ])
@@ -30,9 +30,14 @@ class GlobalSearchAPIView(APIView):
         search = request.query_params.get('search')
         if not search:
             return Response({
-                'category': [],
-                'color': [],
-                'size': [],
+                'categories': [],
+                'colors': [],
+                'sizes': [],
+                'products': [],
+                'news': [],
+                'articles': [],
+                'stores': [],
+                'applications': []
             })
         category_results = Category.objects.filter(
             Q(name_uz__icontains=search) | Q(name_ru__icontains=search) | Q(name_en__icontains=search)
@@ -81,12 +86,62 @@ class GlobalSearchAPIView(APIView):
         application_serializer = ApplicationListSerializer(application_results, many=True)
 
         return Response({
-            'category': category_serializer.data or [],
-            'color': color_serializer.data or [],
-            'size': size_serializer.data or [],
-            'product': catalog_serializer.data or [],
+            'categories': category_serializer.data or [],
+            'colors': color_serializer.data or [],
+            'sizes': size_serializer.data or [],
+            'products': catalog_serializer.data or [],
             'news': news_serializer.data or [],
-            'article': article_serializer.data or [],
-            'store': store_serializer.data or [],
-            'application': application_serializer.data or [],
+            'articles': article_serializer.data or [],
+            'stores': store_serializer.data or [],
+            'applications': application_serializer.data or [],
+        })
+
+
+class UserSiteGlobalSearchAPIView(APIView):
+    @swagger_auto_schema(manual_parameters=[
+        Parameter('search', IN_QUERY, description="Search", type=TYPE_STRING),
+    ])
+    def get(self, request, *args, **kwargs):
+        search = request.query_params.get('search')
+        if not search:
+            return Response({
+                'catalogs': [],
+                'news': [],
+                'articles': [],
+                'stores': []
+            })
+        catalog_results = Catalog.objects.filter(
+            Q(name_uz__icontains=search) | Q(description_uz__icontains=search) |
+            Q(material_uz__icontains=search) | Q(shape_uz__icontains=search) |
+
+            Q(name_ru__icontains=search) | Q(description_ru__icontains=search) |
+            Q(material_ru__icontains=search) | Q(shape_ru__icontains=search) |
+
+            Q(name_en__icontains=search) | Q(description_en__icontains=search) |
+            Q(material_en__icontains=search) | Q(shape_en__icontains=search)
+        )
+        catalog_serializer = GetCatalogSerializer(catalog_results, many=True)
+
+        news_results = News.objects.filter(
+            Q(title_uz__icontains=search) | Q(title_ru__icontains=search) | Q(title_en__icontains=search) |
+            Q(description_uz__icontains=search) | Q(description_ru__icontains=search) |
+            Q(description_en__icontains=search)
+        )
+        news_serializer = GetNewsSerializer(news_results, many=True)
+        article_results = Article.objects.filter(
+            Q(name_uz__icontains=search) | Q(name_ru__icontains=search) | Q(name_en__icontains=search)
+        )
+        article_serializer = GetColorSerializer(article_results, many=True)
+
+        store_results = Store.objects.filter(
+            Q(name_uz__icontains=search) | Q(name_ru__icontains=search) | Q(name_en__icontains=search) |
+            Q(address_uz__icontains=search) | Q(address_ru__icontains=search) | Q(address_en__icontains=search)
+        )
+        store_serializer = SearchStoreSerializer(store_results, many=True)
+
+        return Response({
+            'catalogs': catalog_serializer.data or [],
+            'news': news_serializer.data or [],
+            'articles': article_serializer.data or [],
+            'stores': store_serializer
         })
