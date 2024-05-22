@@ -3,6 +3,7 @@ from drf_yasg.openapi import Parameter, IN_QUERY, TYPE_STRING
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.generics import ListAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -101,6 +102,8 @@ class AdminSiteGlobalSearchAPIView(APIView):
 
 
 class UserSiteGlobalSearchAPIView(APIView):
+    permission_classes = [AllowAny, ]
+
     @swagger_auto_schema(
         manual_parameters=[
             Parameter('search', IN_QUERY, description="Search", type=TYPE_STRING),
