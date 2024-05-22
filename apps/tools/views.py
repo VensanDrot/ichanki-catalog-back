@@ -1,6 +1,7 @@
 from django.db.models import Q
 from drf_yasg.openapi import Parameter, IN_QUERY, TYPE_STRING
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -8,11 +9,11 @@ from rest_framework.views import APIView
 from apps.catalog.models import Size, Color, Category, Catalog
 from apps.catalog.serializer import GetCategorySerializer, GetColorSerializer, GetSizeSerializer, GetCatalogSerializer
 from apps.content.models import News, Article
-from apps.content.serializer import GetNewsSerializer
+from apps.content.serializer import GetNewsSerializer, GetArticleSerializer
 from apps.shopping.models import Application, Store
 from apps.shopping.serializer import SearchStoreSerializer, ApplicationListSerializer
 from apps.tools.models import ActionLog
-from apps.tools.serializer import ActionLogListSerializer
+from apps.tools.serializer import ActionLogListSerializer, AdminSiteGlobalSearchResponseSerializer
 from config.utils.pagination import APIPagination
 
 
@@ -23,9 +24,12 @@ class ActionLogListAPIView(ListAPIView):
 
 
 class AdminSiteGlobalSearchAPIView(APIView):
-    @swagger_auto_schema(manual_parameters=[
-        Parameter('search', IN_QUERY, description="Search", type=TYPE_STRING),
-    ])
+    @swagger_auto_schema(
+        manual_parameters=[
+            Parameter('search', IN_QUERY, description="Search", type=TYPE_STRING),
+        ],
+        responses={status.HTTP_200_OK: AdminSiteGlobalSearchResponseSerializer}
+    )
     def get(self, request, *args, **kwargs):
         search = request.query_params.get('search')
         if not search:
@@ -48,8 +52,7 @@ class AdminSiteGlobalSearchAPIView(APIView):
         )
         color_serializer = GetColorSerializer(color_results, many=True)
         size_results = Size.objects.filter(
-            Q(list_uz__icontains=search) | Q(list_ru__icontains=search) | Q(list_en__icontains=search) |
-            Q(roll_uz__icontains=search) | Q(roll_ru__icontains=search) | Q(roll_en__icontains=search)
+            Q(name__icontains=search)
         )
         size_serializer = GetSizeSerializer(size_results, many=True)
         catalog_results = Catalog.objects.filter(
@@ -73,7 +76,7 @@ class AdminSiteGlobalSearchAPIView(APIView):
         article_results = Article.objects.filter(
             Q(name_uz__icontains=search) | Q(name_ru__icontains=search) | Q(name_en__icontains=search)
         )
-        article_serializer = GetColorSerializer(article_results, many=True)
+        article_serializer = GetArticleSerializer(article_results, many=True)
 
         store_results = Store.objects.filter(
             Q(name_uz__icontains=search) | Q(name_ru__icontains=search) | Q(name_en__icontains=search) |
@@ -98,9 +101,12 @@ class AdminSiteGlobalSearchAPIView(APIView):
 
 
 class UserSiteGlobalSearchAPIView(APIView):
-    @swagger_auto_schema(manual_parameters=[
-        Parameter('search', IN_QUERY, description="Search", type=TYPE_STRING),
-    ])
+    @swagger_auto_schema(
+        manual_parameters=[
+            Parameter('search', IN_QUERY, description="Search", type=TYPE_STRING),
+        ],
+        responses={status.HTTP_200_OK: AdminSiteGlobalSearchResponseSerializer}
+    )
     def get(self, request, *args, **kwargs):
         search = request.query_params.get('search')
         if not search:
@@ -143,5 +149,5 @@ class UserSiteGlobalSearchAPIView(APIView):
             'catalogs': catalog_serializer.data or [],
             'news': news_serializer.data or [],
             'articles': article_serializer.data or [],
-            'stores': store_serializer
+            'stores': store_serializer.data or []
         })
