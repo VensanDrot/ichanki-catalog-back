@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from apps.catalog.managers import CatalogManager
 from config.models import BaseModel
 
 
@@ -50,6 +51,8 @@ class Catalog(BaseModel):
     visits = models.PositiveIntegerField(null=True, blank=True, default=0)
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='category', related_name='catalogs')
+
+    # objects = CatalogManager()
 
     class Meta:
         db_table = 'Catalog'

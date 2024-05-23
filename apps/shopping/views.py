@@ -35,6 +35,12 @@ class StoreModelViewSet(ModelViewSetPack):
         return super().partial_update(request, *args, **kwargs)
 
 
+class StoreListAPIView(ListAPIView):
+    queryset = Store.objects.all()
+    serializer_class = GetStoreSerializer
+    permission_classes = [AllowAny, ]
+
+
 class GiveApplicationAPIView(CreateAPIView):
     queryset = Application.objects.all()
     serializer_class = GiveApplicationSerializer

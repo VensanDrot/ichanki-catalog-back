@@ -4,13 +4,11 @@ from apps.catalog.models import Catalog
 
 
 class ProductFilter(FilterSet):
-    size_roll = CharFilter(field_name='specs__size__roll', lookup_expr='icontains')
-    size_list = CharFilter(field_name='specs__size__list', lookup_expr='icontains')
+    size = CharFilter(field_name='specs__size', lookup_expr='exact')
     color = CharFilter(field_name='specs__color', lookup_expr='exact')
 
     class Meta:
         model = Catalog
         fields = ['category',
                   'color',
-                  'size_roll',
-                  'size_list', ]
+                  'size', ]

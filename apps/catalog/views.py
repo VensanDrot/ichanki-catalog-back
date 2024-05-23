@@ -1,8 +1,11 @@
+from django.db import connection
+from django.db.models import OuterRef, Subquery
+from django.utils.translation import activate, get_language
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.openapi import Parameter, TYPE_STRING, IN_QUERY, IN_PATH
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import ListAPIView, RetrieveAPIView, get_object_or_404
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -226,23 +229,50 @@ class SpecificationModelViewSet(ModelViewSetPack):
 
 
 class SearchProductsAPIView(ListAPIView):
-    queryset = Catalog.objects.select_related('category').prefetch_related('specs')
+    queryset = Catalog.objects.select_related('category').prefetch_related('specs').filter(specs__isnull=False)
     serializer_class = SearchProductSerializer
     filterset_class = ProductFilter
     pagination_class = APIPagination
     permission_classes = [AllowAny, ]
-    filter_backends = [DjangoFilterBackend, SearchFilter, ]
-    search_fields = ['name', 'category__name', 'specs__vendor_code', 'specs__color__name', 'specs__size__list',
-                     'specs__size__roll']
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter, ]
+    search_fields = ['name', 'category__name', 'specs__vendor_code', 'specs__color__name', 'specs__size__name', ]
+    ordering_fields = ['specs__price']
 
     @swagger_auto_schema(manual_parameters=[
         Parameter('category', IN_QUERY, description="Category filter", type=TYPE_STRING),
         Parameter('color', IN_QUERY, description="Color filter", type=TYPE_STRING),
-        Parameter('size_roll', IN_QUERY, description="Size roll filter", type=TYPE_STRING),
-        Parameter('size_list', IN_QUERY, description="Size list filter", type=TYPE_STRING),
+        Parameter('size', IN_QUERY, description="Size filter", type=TYPE_STRING),
+        Parameter('ordering', IN_QUERY, description="Ordering choices: -price, price, new, popular "
+                                                    "(-price=descending order, price=ascending order, "
+                                                    "new=order by date, "
+                                                    "popular=order by visits number)", type=TYPE_STRING),
     ])
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        min_price_subquery = Specification.objects.filter(
+            catalog=OuterRef('pk')
+        ).order_by('price').values('price')[:1]
+        min_created_at_subquery = Specification.objects.filter(
+            catalog=OuterRef('pk')
+        ).order_by('created_at').values('price')[:1]
+
+        queryset = Catalog.objects.annotate(
+            min_price=Subquery(min_price_subquery),
+            min_created_at=Subquery(min_created_at_subquery)
+        ).filter(specs__isnull=False)
+
+        ordering = self.request.query_params.get('ordering')
+        if ordering == 'price':
+            queryset = queryset.order_by('min_price').distinct()
+        elif ordering == '-price':
+            queryset = queryset.order_by('-min_price').distinct()
+        elif ordering == 'new':
+            queryset = queryset.order_by('-min_created_at').distinct()
+        elif ordering == 'popular':
+            queryset = queryset.order_by('-visits').distinct()
+        return queryset
 
 
 class LandingProductsAPIView(ListAPIView):

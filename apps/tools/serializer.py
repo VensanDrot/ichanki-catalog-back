@@ -33,3 +33,9 @@ class UserSiteGlobalSearchResponseSerializer(serializers.Serializer):
     news = GetNewsSerializer(many=True, allow_null=True)
     articles = GetArticleSerializer(many=True, allow_null=True)
     stores = SearchStoreSerializer(many=True, allow_null=True)
+
+
+class UserSiteGlobalSearchCountResponseSerializer(serializers.Serializer):
+    catalogs = serializers.IntegerField(allow_null=True)
+    news = serializers.IntegerField(allow_null=True)
+    articles = serializers.IntegerField(allow_null=True)

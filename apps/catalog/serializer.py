@@ -282,8 +282,14 @@ class RetrieveCatalogSerializer(serializers.ModelSerializer):
 
 class RetrievePageCatalogSerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
-    category = GetCategorySerializer(allow_null=True)
-    specs = GetSpecificationSerializer(many=True, read_only=True)
+    category = serializers.CharField(source='category.name', allow_null=True)
+    specs = ProductSpecificationSerializer(many=True, read_only=True)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        active_specs = instance.specs.filter(is_active=True)
+        representation['specs'] = ProductSpecificationSerializer(active_specs, many=True).data
+        return representation
 
     class Meta:
         model = Catalog

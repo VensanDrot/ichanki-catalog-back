@@ -56,11 +56,14 @@ class RetrieveNewsSerializer(serializers.ModelSerializer):
 
 
 class NewsMainPageSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+
     class Meta:
         model = News
         fields = ['id',
                   'title',
-                  'description', ]
+                  'description',
+                  'files', ]
 
 
 class GetArticleSerializer(serializers.ModelSerializer):
