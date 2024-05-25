@@ -6,6 +6,7 @@ from apps.files.serializer import FileSerializer
 
 
 class GetNewsSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(source='created_at', allow_null=True, read_only=True)
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
 
     class Meta:
@@ -14,7 +15,8 @@ class GetNewsSerializer(serializers.ModelSerializer):
                   'title',
                   'description',
                   'content',
-                  'files', ]
+                  'files',
+                  'date', ]
 
 
 class PostNewsSerializer(serializers.ModelSerializer):
@@ -57,13 +59,15 @@ class RetrieveNewsSerializer(serializers.ModelSerializer):
 
 class NewsMainPageSerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+    date = serializers.DateField(source='created_at', allow_null=True, read_only=True)
 
     class Meta:
         model = News
         fields = ['id',
                   'title',
                   'description',
-                  'files', ]
+                  'files',
+                  'date', ]
 
 
 class GetArticleSerializer(serializers.ModelSerializer):
