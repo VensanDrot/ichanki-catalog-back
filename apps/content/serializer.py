@@ -6,8 +6,14 @@ from apps.files.serializer import FileSerializer
 
 
 class GetNewsSerializer(serializers.ModelSerializer):
-    date = serializers.DateField(source='created_at', allow_null=True, read_only=True)
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+    date = serializers.SerializerMethodField(allow_null=True)
+
+    @staticmethod
+    def get_date(obj):
+        if obj.created_at:
+            return obj.created_at.date()
+        return None
 
     class Meta:
         model = News
@@ -59,7 +65,13 @@ class RetrieveNewsSerializer(serializers.ModelSerializer):
 
 class NewsMainPageSerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
-    date = serializers.DateField(source='created_at', allow_null=True, read_only=True)
+    date = serializers.SerializerMethodField(allow_null=True)
+
+    @staticmethod
+    def get_date(obj):
+        if obj.created_at:
+            return obj.created_at.date()
+        return None
 
     class Meta:
         model = News
