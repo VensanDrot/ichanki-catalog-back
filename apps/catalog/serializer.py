@@ -80,10 +80,10 @@ class GetCatalogSerializer(serializers.ModelSerializer):
 
 
 class GetSpecificationSerializer(serializers.ModelSerializer):
-    miniature = serializers.CharField(source='miniature.path', allow_null=True)
-    catalog = serializers.CharField(source='catalog.name')
+    miniature = FileSerializer(allow_null=True)
+    catalog = MultiLanguageCategorySerializer(allow_null=True)
     size = GetSizeSerializer(many=True, allow_null=True)
-    color = serializers.CharField(source='color.name')
+    color = PostColorSerializer(allow_null=True)
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
 
     class Meta:

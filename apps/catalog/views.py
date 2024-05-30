@@ -272,6 +272,8 @@ class SearchProductsAPIView(ListAPIView):
             queryset = queryset.order_by('-min_created_at').distinct()
         elif ordering == 'popular':
             queryset = queryset.order_by('-visits').distinct()
+        else:
+            queryset = queryset.distinct()
         return queryset
 
 
