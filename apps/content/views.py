@@ -1,6 +1,6 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.permissions import AllowAny
 
@@ -44,7 +44,8 @@ class NewsPageListAPIView(ListAPIView):
     serializer_class = NewsMainPageSerializer
     permission_classes = [AllowAny, ]
     pagination_class = APIPagination
-    filter_backends = [DjangoFilterBackend, SearchFilter, ]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter, ]
+    ordering_fields = ['created_at', ]
     search_fields = ['title_uz', 'title_ru', 'title_en',
                      'description_uz', 'description_ru', 'description_en',
                      'content_uz', 'content_ru', 'content_en', ]
@@ -62,7 +63,7 @@ class ArticleModelViewSet(ModelViewSetPack):
     post_serializer_class = PostArticleSerializer
     permission_classes = (LandingPage,)
     filter_backends = [DjangoFilterBackend, SearchFilter, ]
-    search_fields = ['name_uz', 'name_ru', 'name_en',]
+    search_fields = ['name_uz', 'name_ru', 'name_en', ]
 
     @swagger_auto_schema(request_body=PostArticleSerializer)
     def update(self, request, *args, **kwargs):
