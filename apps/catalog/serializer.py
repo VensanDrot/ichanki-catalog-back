@@ -142,7 +142,8 @@ class ProductSpecificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Specification
-        fields = ['price',
+        fields = ['id',
+                  'price',
                   'discount',
                   'color',
                   'size',
