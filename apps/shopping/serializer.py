@@ -51,6 +51,28 @@ class PostStoreSerializer(serializers.ModelSerializer):
                   'files', ]
 
 
+class StoreMultiLangListSerializer(serializers.ModelSerializer):
+    files = FileSerializer(many=True, allow_null=True)
+
+    class Meta:
+        model = Store
+        fields = ['id',
+                  'name_uz',
+                  'name_en',
+                  'name_ru',
+                  'description_uz',
+                  'description_en',
+                  'description_ru',
+                  'address_uz',
+                  'address_en',
+                  'address_ru',
+                  'phone_number',
+                  'work_schedule',
+                  'map_link',
+                  'region',
+                  'files', ]
+
+
 class OrderedProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderedProduct

@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 from apps.shopping.filters import ApplicationFilter
 from apps.shopping.models import Store, Application, ACCEPTED
 from apps.shopping.serializer import GetStoreSerializer, PostStoreSerializer, GiveApplicationSerializer, \
-    ApplicationListSerializer
+    ApplicationListSerializer, StoreMultiLangListSerializer
 from config.utils.pagination import APIPagination
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
@@ -33,6 +33,11 @@ class StoreModelViewSet(ModelViewSetPack):
     @swagger_auto_schema(request_body=PostStoreSerializer)
     def partial_update(self, request, *args, **kwargs):
         return super().partial_update(request, *args, **kwargs)
+
+
+class StoreMultiLangListAPIView(ListAPIView):
+    queryset = Store.objects.all()
+    serializer_class = StoreMultiLangListSerializer
 
 
 class StoreListAPIView(ListAPIView):
