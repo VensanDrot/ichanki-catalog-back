@@ -5,7 +5,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from django.utils.translation import gettext_lazy as _
 from rest_framework import status
-from rest_framework.generics import CreateAPIView, ListAPIView, get_object_or_404
+from rest_framework.generics import CreateAPIView, ListAPIView, get_object_or_404, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -35,7 +35,7 @@ class StoreModelViewSet(ModelViewSetPack):
         return super().partial_update(request, *args, **kwargs)
 
 
-class StoreMultiLangListAPIView(ListAPIView):
+class StoreMultiLangListAPIView(RetrieveAPIView):
     queryset = Store.objects.all()
     serializer_class = StoreMultiLangListSerializer
 
