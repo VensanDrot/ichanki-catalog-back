@@ -67,8 +67,8 @@ class Specification(BaseModel):
     price = models.FloatField('price')
     discount = models.FloatField('discount', null=True, blank=True)
 
-    miniature = models.ForeignKey('files.File', on_delete=models.SET_NULL, null=True, blank=True,
-                                  related_name='miniature_specs', verbose_name='miniature')
+    files = models.ForeignKey('files.File', on_delete=models.SET_NULL, null=True, blank=True,
+                              related_name='specs', verbose_name='miniature')
     # photos ForeignKey inside File model
     # photo = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True,
     #                           related_name='photo_specs', verbose_name='photo')

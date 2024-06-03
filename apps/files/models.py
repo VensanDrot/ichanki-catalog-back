@@ -15,8 +15,8 @@ class File(BaseModel):
     extension = models.CharField(max_length=30, null=True)
 
     catalog = models.ForeignKey(Catalog, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
-    specification = models.ForeignKey(Specification, on_delete=models.SET_NULL, null=True, blank=True,
-                                      related_name='files')
+    # specification = models.ForeignKey(Specification, on_delete=models.SET_NULL, null=True, blank=True,
+    #                                   related_name='files')
     news = models.ForeignKey(News, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
     store = models.ForeignKey(Store, on_delete=models.SET_NULL, null=True, blank=True, related_name='files')
 

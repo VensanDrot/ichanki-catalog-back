@@ -80,11 +80,12 @@ class GetCatalogSerializer(serializers.ModelSerializer):
 
 
 class GetSpecificationSerializer(serializers.ModelSerializer):
-    miniature = FileSerializer(allow_null=True)
+    files = FileSerializer(allow_null=True)
     catalog = MultiLanguageCategorySerializer(allow_null=True)
     size = GetSizeSerializer(many=True, allow_null=True)
     color = PostColorSerializer(allow_null=True)
-    files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
+
+    # files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
 
     class Meta:
         model = Specification
@@ -93,11 +94,10 @@ class GetSpecificationSerializer(serializers.ModelSerializer):
                   'vendor_code',
                   'price',
                   'discount',
-                  'miniature',
+                  'files',
                   'catalog',
                   'size',
-                  'color',
-                  'files', ]
+                  'color', ]
 
 
 class PostSpecificationSerializer(serializers.ModelSerializer):
@@ -111,7 +111,7 @@ class PostSpecificationSerializer(serializers.ModelSerializer):
                   'vendor_code',
                   'price',
                   'discount',
-                  'miniature',
+                  'files',
                   'catalog',
                   'size',
                   'color',
@@ -119,7 +119,6 @@ class PostSpecificationSerializer(serializers.ModelSerializer):
 
 
 class InsideCatalogSpecificationSerializer(serializers.ModelSerializer):
-    files = serializers.SlugRelatedField(slug_field='id', many=True, queryset=File.objects.all())
     size = serializers.SlugRelatedField(slug_field='id', many=True, queryset=Size.objects.all())
 
     class Meta:
@@ -129,14 +128,13 @@ class InsideCatalogSpecificationSerializer(serializers.ModelSerializer):
                   'vendor_code',
                   'price',
                   'discount',
-                  'miniature',
+                  'files',
                   'size',
-                  'color',
-                  'files', ]
+                  'color', ]
 
 
 class ProductSpecificationSerializer(serializers.ModelSerializer):
-    miniature = FileSerializer(read_only=True, required=False, allow_null=True)
+    files = FileSerializer(read_only=True, required=False, allow_null=True)
     color = serializers.CharField(source='color.name')
     size = GetSizeSerializer(many=True, allow_null=True)
 
@@ -148,11 +146,11 @@ class ProductSpecificationSerializer(serializers.ModelSerializer):
                   'color',
                   'size',
                   'vendor_code',
-                  'miniature', ]
+                  'files', ]
 
 
 class LandingSpecificationSerializer(serializers.ModelSerializer):
-    miniature = FileSerializer(read_only=True, required=False, allow_null=True)
+    files = FileSerializer(read_only=True, required=False, allow_null=True)
     color = serializers.CharField(source='color.name')
 
     class Meta:
@@ -160,7 +158,7 @@ class LandingSpecificationSerializer(serializers.ModelSerializer):
         fields = ['discount',
                   'color',
                   'vendor_code',
-                  'miniature', ]
+                  'files', ]
 
 
 class SearchProductSerializer(serializers.ModelSerializer):
@@ -210,12 +208,10 @@ class PostCatalogSerializer(serializers.ModelSerializer):
         specs = validated_data.pop('specs', [])
         instance = super().create(validated_data)
         for spec in specs:
-            if not spec.get('miniature'):
-                spec.pop('miniature', '')
-            spec_files = spec.pop('files', [])
+            if not spec.get('files'):
+                spec.pop('files', '')
             spec_sizes = spec.pop('size', [])
             specification = Specification.objects.create(catalog_id=instance.id, **spec)
-            specification.files.add(*spec_files)
             specification.size.add(*spec_sizes)
             instance.specs.add(specification)
         return instance
@@ -225,12 +221,10 @@ class PostCatalogSerializer(serializers.ModelSerializer):
         instance: Catalog = super().update(instance, validated_data)
         instance.specs.all().delete()
         for spec in specs:
-            if not spec.get('miniature'):
-                spec.pop('miniature', '')
-            spec_files = spec.pop('files', [])
+            if not spec.get('files'):
+                spec.pop('files', '')
             spec_sizes = spec.pop('size', [])
             specification = Specification.objects.create(catalog_id=instance.id, **spec)
-            specification.files.add(*spec_files)
             specification.size.add(*spec_sizes)
             instance.specs.add(specification)
         return instance
