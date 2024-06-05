@@ -1,6 +1,6 @@
 from modeltranslation.translator import TranslationOptions, translator
 
-from .models import News, Article, Banner
+from .models import News, Article, Banner, KnowledgeBase
 
 
 class NewsTranslationOptions(TranslationOptions):
@@ -16,5 +16,6 @@ class BannerTranslationOptions(TranslationOptions):
 
 
 translator.register(News, NewsTranslationOptions)
+translator.register(KnowledgeBase, NewsTranslationOptions)
 translator.register(Article, ArticleTranslationOptions)
 translator.register(Banner, BannerTranslationOptions)

@@ -22,6 +22,18 @@ class Article(BaseModel):
         db_table = 'Article'
 
 
+class KnowledgeBase(BaseModel):
+    is_draft = models.BooleanField('is draft', default=False)
+    title = models.CharField('title', max_length=155)
+    description = models.TextField('description', null=True, blank=True)
+    content = models.TextField('content', null=True, blank=True)
+
+    article = models.ForeignKey(Article, on_delete=models.SET_NULL, null=True, blank=True)
+
+    class Meta:
+        db_table = 'KnowledgeBase'
+
+
 class Banner(BaseModel):
     name = models.CharField(max_length=255, null=True, blank=True)
     description = models.TextField(null=True, blank=True)

@@ -4,10 +4,11 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.permissions import AllowAny
 
-from apps.content.models import News, Article, Banner
+from apps.content.models import News, Article, Banner, KnowledgeBase
 from apps.content.serializer import GetNewsSerializer, PostNewsSerializer, GetArticleSerializer, PostArticleSerializer, \
     RetrieveNewsSerializer, GetBannerSerializer, PostBannerSerializer, RetrieveBannerSerializer, \
-    BannerMainPageSerializer, NewsMainPageSerializer
+    BannerMainPageSerializer, NewsMainPageSerializer, GetKnowledgeBaseSerializer, PostKnowledgeBaseSerializer, \
+    KnowledgeBaseNewsSerializer, KnowledgeBaseMainPageSerializer
 from config.utils.pagination import APIPagination
 from config.utils.permissions import LandingPage
 from config.views import ModelViewSetPack
@@ -44,17 +45,49 @@ class NewsPageListAPIView(ListAPIView):
     serializer_class = NewsMainPageSerializer
     permission_classes = [AllowAny, ]
     pagination_class = APIPagination
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter, ]
+    filter_backends = [DjangoFilterBackend, OrderingFilter, ]
     ordering_fields = ['created_at', ]
-    search_fields = ['title_uz', 'title_ru', 'title_en',
-                     'description_uz', 'description_ru', 'description_en',
-                     'content_uz', 'content_ru', 'content_en', ]
+    # search_fields = ['title_uz', 'title_ru', 'title_en',
+    #                  'description_uz', 'description_ru', 'description_en',
+    #                  'content_uz', 'content_ru', 'content_en', ]
 
 
 class NewsLandingRetrieveAPIView(RetrieveAPIView):
     queryset = News.objects.filter(is_draft=False)
     serializer_class = GetNewsSerializer
     permission_classes = [AllowAny, ]
+
+
+class KnowledgeBaseModelViewSet(ModelViewSetPack):
+    queryset = KnowledgeBase.objects.all()
+    serializer_class = GetKnowledgeBaseSerializer
+    post_serializer_class = PostKnowledgeBaseSerializer
+    permission_classes = (LandingPage,)
+
+    @swagger_auto_schema(request_body=PostKnowledgeBaseSerializer)
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+
+    @swagger_auto_schema(request_body=PostKnowledgeBaseSerializer)
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
+
+
+class KnowledgeBaseRetrieveAPIView(RetrieveAPIView):
+    queryset = KnowledgeBase.objects.all()
+    serializer_class = KnowledgeBaseNewsSerializer
+
+
+class KnowledgeBasePageListAPIView(ListAPIView):
+    queryset = KnowledgeBase.objects.filter(is_draft=False).order_by('-id')
+    serializer_class = KnowledgeBaseMainPageSerializer
+    permission_classes = [AllowAny, ]
+    pagination_class = APIPagination
+    filter_backends = [DjangoFilterBackend, OrderingFilter, ]
+    ordering_fields = ['created_at', ]
+    # search_fields = ['title_uz', 'title_ru', 'title_en',
+    #                  'description_uz', 'description_ru', 'description_en',
+    #                  'content_uz', 'content_ru', 'content_en', ]
 
 
 class ArticleModelViewSet(ModelViewSetPack):
