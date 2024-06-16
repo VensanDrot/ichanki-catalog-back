@@ -13,9 +13,9 @@ from apps.content.models import News, Article
 from apps.content.serializer import GetNewsSerializer, GetArticleSerializer
 from apps.shopping.models import Application, Store
 from apps.shopping.serializer import SearchStoreSerializer, ApplicationListSerializer
-from apps.tools.models import ActionLog
+from apps.tools.models import ActionLog, Region
 from apps.tools.serializer import ActionLogListSerializer, AdminSiteGlobalSearchResponseSerializer, \
-    UserSiteGlobalSearchResponseSerializer, UserSiteGlobalSearchCountResponseSerializer
+    UserSiteGlobalSearchResponseSerializer, UserSiteGlobalSearchCountResponseSerializer, RegionListSerializer
 from config.utils.pagination import APIPagination
 
 
@@ -229,3 +229,9 @@ class UserSiteGlobalSearchCountsAPIView(APIView, APIPagination):
             # 'articles': article_serializer.data or [],
             # 'stores': store_serializer.data or []
         })
+
+
+class RegionListAPIView(ListAPIView):
+    queryset = Region.objects.all()
+    serializer_class = RegionListSerializer
+    permission_classes = [AllowAny, ]

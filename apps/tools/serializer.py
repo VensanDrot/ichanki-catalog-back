@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.tools.models import ActionLog
+from apps.tools.models import ActionLog, Region
 from apps.catalog.serializer import GetCategorySerializer, GetColorSerializer, GetSizeSerializer, GetCatalogSerializer
 from apps.content.serializer import GetNewsSerializer, GetArticleSerializer
 from apps.shopping.serializer import SearchStoreSerializer, ApplicationListSerializer
@@ -39,3 +39,10 @@ class UserSiteGlobalSearchCountResponseSerializer(serializers.Serializer):
     catalogs = serializers.IntegerField(allow_null=True)
     news = serializers.IntegerField(allow_null=True)
     articles = serializers.IntegerField(allow_null=True)
+
+
+class RegionListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Region
+        fields = ['id',
+                  'name', ]
