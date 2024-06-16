@@ -64,6 +64,7 @@ class PostNewsSerializer(serializers.ModelSerializer):
 class GetKnowledgeBaseSerializer(serializers.ModelSerializer):
     files = FileSerializer(many=True, read_only=True, required=False, allow_null=True)
     date = serializers.SerializerMethodField(allow_null=True)
+    article = serializers.CharField(source='article.name', allow_null=True)
 
     @staticmethod
     def get_date(obj):
