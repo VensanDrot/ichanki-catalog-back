@@ -1,3 +1,4 @@
+from django.utils.timezone import localtime
 from rest_framework import serializers
 
 from apps.files.models import File
@@ -110,6 +111,11 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     delivery_pickup = serializers.CharField(source='get_delivery_pickup_display', allow_null=True)
     status = serializers.CharField(source='get_status_display', allow_null=True)
     store = serializers.CharField(source='store.name', allow_null=True)
+    created_at = serializers.SerializerMethodField(allow_null=True)
+
+    @staticmethod
+    def get_created_at(obj):
+        return localtime(obj.created_at).strftime('%Y-%m-%d %H:%M')
 
     class Meta:
         model = Application
@@ -124,4 +130,5 @@ class ApplicationListSerializer(serializers.ModelSerializer):
                   'total_price',
                   'delivery_price',
                   'store',
-                  'status', ]
+                  'status',
+                  'created_at', ]
