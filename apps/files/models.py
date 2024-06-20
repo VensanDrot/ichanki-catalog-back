@@ -1,6 +1,6 @@
 from django.db import models
 
-from apps.catalog.models import Specification, Catalog
+from apps.catalog.models import Catalog
 from apps.content.models import News, KnowledgeBase
 from apps.shopping.models import Store
 from config.models import BaseModel

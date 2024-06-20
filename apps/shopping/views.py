@@ -53,7 +53,10 @@ class GiveApplicationAPIView(CreateAPIView):
 
 
 class ApplicationListAPIView(ListAPIView):
-    queryset = Application.objects.all().order_by('-created_at')
+    queryset = (Application.objects
+                .select_related('store', 'region')
+                .prefetch_related('ordered_product__product__catalog__category')
+                .order_by('-created_at'))
     serializer_class = ApplicationListSerializer
     pagination_class = APIPagination
     filterset_class = ApplicationFilter

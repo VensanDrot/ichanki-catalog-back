@@ -106,12 +106,34 @@ class GiveApplicationSerializer(serializers.ModelSerializer):
                   'order', ]
 
 
+class OrderedProductDataSerializer(serializers.ModelSerializer):
+    photo = FileSerializer(source='product.files', allow_null=True)
+    name = serializers.CharField(source='product.catalog.name', allow_null=True)
+    vendor_code = serializers.CharField(source='product.vendor_code', allow_null=True)
+    shape = serializers.CharField(source='product.catalog.shape', allow_null=True)
+    price = serializers.FloatField(source='product.price', allow_null=True)
+    discount = serializers.FloatField(source='product.discount', allow_null=True)
+    category = serializers.CharField(source='product.catalog.category.name', allow_null=True)
+
+    class Meta:
+        model = OrderedProduct
+        fields = ['quantity',
+                  'photo',
+                  'name',
+                  'vendor_code',
+                  'shape',
+                  'price',
+                  'discount',
+                  'category', ]
+
+
 class ApplicationListSerializer(serializers.ModelSerializer):
     sender_language = serializers.CharField(source='get_sender_language_display', allow_null=True)
     delivery_pickup = serializers.CharField(source='get_delivery_pickup_display', allow_null=True)
     status = serializers.CharField(source='get_status_display', allow_null=True)
     store = serializers.CharField(source='store.name', allow_null=True)
     created_at = serializers.SerializerMethodField(allow_null=True)
+    ordered_product = OrderedProductDataSerializer(many=True, allow_null=True)
 
     @staticmethod
     def get_created_at(obj):
@@ -131,4 +153,5 @@ class ApplicationListSerializer(serializers.ModelSerializer):
                   'delivery_price',
                   'store',
                   'status',
-                  'created_at', ]
+                  'created_at',
+                  'ordered_product', ]
