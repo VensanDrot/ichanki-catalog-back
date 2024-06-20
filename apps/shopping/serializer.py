@@ -1,3 +1,5 @@
+from django.db.models import Sum, Value
+from django.db.models.functions import Coalesce
 from django.utils.timezone import localtime
 from rest_framework import serializers
 
@@ -134,6 +136,14 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     store = serializers.CharField(source='store.name', allow_null=True)
     created_at = serializers.SerializerMethodField(allow_null=True)
     ordered_product = OrderedProductDataSerializer(many=True, allow_null=True)
+    total_quantity = serializers.SerializerMethodField(allow_null=True)
+
+    @staticmethod
+    def get_total_quantity(obj):
+        total_quantity = obj.ordered_product.aggregate(
+            total_quantity=Coalesce(Sum('quantity'), Value(0))
+        )['total_quantity']
+        return total_quantity
 
     @staticmethod
     def get_created_at(obj):
@@ -154,4 +164,5 @@ class ApplicationListSerializer(serializers.ModelSerializer):
                   'store',
                   'status',
                   'created_at',
+                  'total_quantity',
                   'ordered_product', ]
