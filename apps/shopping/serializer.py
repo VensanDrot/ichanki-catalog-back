@@ -100,12 +100,13 @@ class GiveApplicationSerializer(serializers.ModelSerializer):
                   'fullname',
                   'phone_number',
                   'delivery_pickup',
+                  'delivery_price',
                   'region',
                   'address',
                   'comment',
                   'total_price',
-                  'delivery_price',
-                  'order', ]
+                  'order',
+                  'store', ]
 
 
 class OrderedProductDataSerializer(serializers.ModelSerializer):
