@@ -58,6 +58,7 @@ class FileCreateAPIView(APIView):
         return Response({
             "message": "File successfully uploaded",
             "file": e_file.id,
+            "path": e_file.path,
             "status": status.HTTP_201_CREATED
         }, status=status.HTTP_201_CREATED)
 
