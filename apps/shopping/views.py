@@ -106,6 +106,7 @@ class AcceptApplicationAPIView(APIView):
         application_id = kwargs['application_id']
         instance = get_object_or_404(Application, pk=application_id)
         instance.status = ACCEPTED
+        instance.author = request.user
         instance.save()
         return Response({
             'detail': 'Application accepted',
