@@ -138,6 +138,7 @@ class ApplicationListSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField(allow_null=True)
     ordered_product = OrderedProductDataSerializer(many=True, allow_null=True)
     total_quantity = serializers.SerializerMethodField(allow_null=True)
+    author = serializers.CharField(source='author.fullname', allow_null=True)
 
     @staticmethod
     def get_total_quantity(obj):
@@ -165,5 +166,6 @@ class ApplicationListSerializer(serializers.ModelSerializer):
                   'store',
                   'status',
                   'created_at',
+                  'author',
                   'total_quantity',
                   'ordered_product', ]
