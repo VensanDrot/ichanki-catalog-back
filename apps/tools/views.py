@@ -22,6 +22,7 @@ from apps.shopping.serializer import SearchStoreSerializer, ApplicationListSeria
 from apps.tools.models import ActionLog, Region
 from apps.tools.serializer import ActionLogListSerializer, AdminSiteGlobalSearchResponseSerializer, \
     UserSiteGlobalSearchResponseSerializer, UserSiteGlobalSearchCountResponseSerializer, RegionListSerializer
+from config.utils.api_exceptions import APIValidation
 from config.utils.pagination import APIPagination
 
 
@@ -244,9 +245,17 @@ class RegionListAPIView(ListAPIView):
 
 
 class DashboardAPIView(APIView):
+    @swagger_auto_schema(
+        manual_parameters=[
+            Parameter('from', IN_QUERY, description="FROM date filter", type=TYPE_STRING),
+            Parameter('to', IN_QUERY, description="TO date filter", type=TYPE_STRING),
+        ]
+    )
     def get(self, request):
         from_date = request.query_params.get('from')
         to_date = request.query_params.get('to')
+        if not (from_date and to_date):
+            raise APIValidation('from and to params required!', status_code=status.HTTP_400_BAD_REQUEST)
         start_date = datetime.strptime(from_date, '%Y-%m-%d').date()
         end_date = datetime.strptime(to_date, '%Y-%m-%d').date()
 
