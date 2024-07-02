@@ -1,4 +1,10 @@
+import locale
+from collections import defaultdict
+from datetime import datetime, timedelta
+
+from django.conf import settings
 from django.db.models import Q
+from django.utils.timezone import localdate
 from drf_yasg.openapi import Parameter, IN_QUERY, TYPE_STRING
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -235,3 +241,34 @@ class RegionListAPIView(ListAPIView):
     queryset = Region.objects.all()
     serializer_class = RegionListSerializer
     permission_classes = [AllowAny, ]
+
+
+class DashboardAPIView(APIView):
+    def get(self, request):
+        from_date = request.query_params.get('from')
+        to_date = request.query_params.get('to')
+        start_date = datetime.strptime(from_date, '%Y-%m-%d').date()
+        end_date = datetime.strptime(to_date, '%Y-%m-%d').date()
+
+        applications = (Application.objects
+                        .select_related('author', 'store', 'region', )
+                        .prefetch_related('ordered_product')
+                        .filter(created_at__date__gte=from_date, created_at__date__lte=to_date))
+
+        date_applications = defaultdict(int)
+        for app in applications:
+            local_date = localdate(app.created_at)
+            date_applications[local_date] += 1
+        all_dates = [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+        for date in all_dates:
+            if date not in date_applications:
+                date_applications[date] = 0
+        sorted_dates = sorted(date_applications.keys())
+        locale.setlocale(locale.LC_TIME, settings.SET_LOCAL_LANGUAGE)
+        labels = [date.strftime('%b-%d').capitalize() for date in sorted_dates]
+        line1 = [date_applications[date] for date in sorted_dates]
+        chart = {
+            'line1': line1,
+            'labels': labels
+        }
+        return Response(chart)

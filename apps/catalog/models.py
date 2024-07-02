@@ -1,12 +1,11 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from apps.catalog.managers import CatalogManager
 from config.models import BaseModel
 
 
 class BaseModelName(BaseModel):
-    name = models.CharField('name', max_length=155)
+    name = models.CharField(_('name'), max_length=155)
 
     def __str__(self):
         return self.name
