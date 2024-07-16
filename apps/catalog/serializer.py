@@ -71,6 +71,7 @@ class GetCatalogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catalog
         fields = ['id',
+                  'is_popular',
                   'name',
                   'description',
                   'files',
@@ -233,6 +234,7 @@ class PostCatalogSerializer(serializers.ModelSerializer):
         model = Catalog
         fields = [
             'id',
+            'is_popular',
             'name_uz',
             'name_ru',
             'name_en',
@@ -258,6 +260,7 @@ class RetrieveCatalogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catalog
         fields = ['id',
+                  'is_popular',
                   'name_uz',
                   'name_ru',
                   'name_en',
