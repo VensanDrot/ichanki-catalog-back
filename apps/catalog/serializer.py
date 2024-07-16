@@ -309,6 +309,7 @@ class MultiLanguageCatalogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catalog
         fields = ['id',
+                  'is_popular',
                   'name_uz',
                   'name_ru',
                   'name_en',
