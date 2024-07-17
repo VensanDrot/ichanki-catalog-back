@@ -91,7 +91,6 @@ class GetSpecificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Specification
         fields = ['id',
-                  'in_stock',
                   'is_active',
                   'vendor_code',
                   'price',
@@ -109,7 +108,6 @@ class PostSpecificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Specification
         fields = ['id',
-                  'in_stock',
                   'is_active',
                   'vendor_code',
                   'price',
