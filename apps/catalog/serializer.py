@@ -176,6 +176,7 @@ class SearchProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catalog
         fields = ['id',
+                  'is_popular',
                   'name',
                   'description',
                   'files',
@@ -196,6 +197,7 @@ class LandingProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catalog
         fields = ['id',
+                  'is_popular',
                   'name',
                   'files',
                   'specs', ]
