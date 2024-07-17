@@ -66,7 +66,6 @@ class Specification(BaseModel):
     vendor_code = models.CharField('vendor code', max_length=100)
     price = models.FloatField('price')
     discount = models.FloatField('discount', null=True, blank=True)
-    in_stock = models.BooleanField(default=True)
 
     files = models.ForeignKey('files.File', on_delete=models.SET_NULL, null=True, blank=True,
                               related_name='specs', verbose_name='miniature')
