@@ -72,6 +72,7 @@ class GetCatalogSerializer(serializers.ModelSerializer):
         model = Catalog
         fields = ['id',
                   'is_popular',
+                  'is_newest',
                   'name',
                   'description',
                   'files',
@@ -177,6 +178,7 @@ class SearchProductSerializer(serializers.ModelSerializer):
         model = Catalog
         fields = ['id',
                   'is_popular',
+                  'is_newest',
                   'name',
                   'description',
                   'files',
@@ -198,6 +200,7 @@ class LandingProductSerializer(serializers.ModelSerializer):
         model = Catalog
         fields = ['id',
                   'is_popular',
+                  'is_newest',
                   'name',
                   'files',
                   'specs', ]
@@ -237,6 +240,7 @@ class PostCatalogSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'is_popular',
+            'is_newest',
             'name_uz',
             'name_ru',
             'name_en',
@@ -263,6 +267,7 @@ class RetrieveCatalogSerializer(serializers.ModelSerializer):
         model = Catalog
         fields = ['id',
                   'is_popular',
+                  'is_newest',
                   'name_uz',
                   'name_ru',
                   'name_en',
@@ -294,6 +299,8 @@ class RetrievePageCatalogSerializer(serializers.ModelSerializer):
     class Meta:
         model = Catalog
         fields = ['id',
+                  'is_popular',
+                  'is_newest',
                   'name',
                   'description',
                   'files',

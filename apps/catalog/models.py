@@ -49,6 +49,7 @@ class Catalog(BaseModel):
     shape = models.CharField('shape', max_length=55, null=True, blank=True)
     visits = models.PositiveIntegerField(null=True, blank=True, default=0)
     is_popular = models.BooleanField(default=False)
+    is_newest = models.BooleanField(default=False)
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='category', related_name='catalogs')
 
