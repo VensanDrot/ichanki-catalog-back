@@ -319,6 +319,7 @@ class MultiLanguageCatalogSerializer(serializers.ModelSerializer):
         model = Catalog
         fields = ['id',
                   'is_popular',
+                  'is_newest',
                   'name_uz',
                   'name_ru',
                   'name_en',
