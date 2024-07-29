@@ -97,6 +97,11 @@ class ColorRetrieveAPIView(RetrieveAPIView):
     serializer_class = PostColorSerializer
 
 
+class ColorSelectorAPIView(ListAPIView):
+    queryset = Color.objects.all()
+    serializer_class = GetColorSerializer
+
+
 class SizeModelViewSet(ModelViewSetPack):
     queryset = Size.objects.all()
     serializer_class = GetSizeSerializer

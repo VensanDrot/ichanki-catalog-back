@@ -3,7 +3,8 @@ from rest_framework.routers import DefaultRouter
 
 from apps.catalog.views import SizeModelViewSet, ColorModelViewSet, CategoryModelViewSet, CatalogModelViewSet, \
     SpecificationModelViewSet, SearchProductsAPIView, CategoryRetrieveAPIView, ColorRetrieveAPIView, \
-    SizeRetrieveAPIView, CatalogRetrieveAPIView, SizeTypeSelectAPIView, LandingProductsAPIView, SameProductsAPIView
+    SizeRetrieveAPIView, CatalogRetrieveAPIView, SizeTypeSelectAPIView, LandingProductsAPIView, SameProductsAPIView, \
+    ColorSelectorAPIView
 
 router = DefaultRouter()
 router.register(r'category', CategoryModelViewSet, basename='category')
@@ -19,6 +20,7 @@ urlpatterns = [
     path('products/same-products/<int:product_id>/', SameProductsAPIView.as_view(), name='same_products'),
     path('category/<int:pk>/all/', CategoryRetrieveAPIView.as_view(), name='category_retrieve_all'),
     path('color/<int:pk>/all/', ColorRetrieveAPIView.as_view(), name='color_retrieve_all'),
+    path('color/selector/', ColorSelectorAPIView.as_view(), name='color_selector'),
     path('size/<int:pk>/all/', SizeRetrieveAPIView.as_view(), name='size_retrieve_all'),
     path('size-types/', SizeTypeSelectAPIView.as_view(), name='size_types'),
     path('product/<int:pk>/all/', CatalogRetrieveAPIView.as_view(), name='product_retrieve_all'),
