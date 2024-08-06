@@ -74,7 +74,8 @@ class Specification(BaseModel):
     # photo = models.ForeignKey(File, on_delete=models.SET_NULL, null=True, blank=True,
     #                           related_name='photo_specs', verbose_name='photo')
     catalog = models.ForeignKey(Catalog, on_delete=models.CASCADE, verbose_name='catalog', related_name='specs')
-    color = models.ForeignKey(Color, on_delete=models.CASCADE, verbose_name='color', related_name='specs')
+    color = models.ForeignKey(Color, on_delete=models.CASCADE, verbose_name='color', related_name='specs',
+                              null=True, blank=True)
     size = models.ManyToManyField(Size, related_name='specs')
 
     class Meta:
